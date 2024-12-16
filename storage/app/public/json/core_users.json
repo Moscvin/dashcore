@@ -1,0 +1,5 @@
+[
+{"id_user":"4","name":"Fabio","surname":"Cioni","username":"fabio-cioni","password":"$2y$10$n0LOGBJkKZkIz28s2u0ZveSPfIL4cjblUJ8DHwcUZ28J0iTKqKWiG","remember_token":"dHE0s5vZcB76BPS6SXLz4z3ySnbQCqDie8ylQGVfDDLt3wQNwCepnIDrzweZ","app_token":null,"email":"f.cioni@bludelego.it","isactive":"1","id_group":"1","first_login":"0","created_at":"2018-01-18 01:00:00","updated_at":"2019-06-13 13:59:00"},
+{"id_user":"6","name":"Radu","surname":"Dobrostomat","username":"radu","password":"$2y$10$yiP7LlnFotzE4EvjMWJDbeKrsZOb8Ka0PMPL\/O7.ixru2baTvP8iO","remember_token":"a1KoTqSEBNzzQovwG3vLgiCmEKkVar3kZUP8Vx91Yg85GxIJv8dNCytJ73sJ","app_token":null,"email":"radu.box@gmail.com","isactive":"1","id_group":"1","first_login":"0","created_at":"2018-01-09 13:19:54","updated_at":"2019-05-24 12:57:19"},
+{"id_user":"25","name":"Vadim","surname":"Sheshnitsan","username":"Malliroh","password":"$2y$10$Hm1N9FCvjudicox4VbaXUuX\/zPfvy9M1jMkStx2abizOmQZOTNqR.","remember_token":"rwMY3e9CMD9AP4hm4Yfi4Yhh9NVidC8G0VB2SXcF2kfb8RnACIU1K9dlV4b9","app_token":null,"email":"malliroh96@gmail.com","isactive":"1","id_group":"1","first_login":"0","created_at":null,"updated_at":"2019-07-17 11:36:48"}
+]

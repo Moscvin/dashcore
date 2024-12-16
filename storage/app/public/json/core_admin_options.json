@@ -1,0 +1,163 @@
+[
+    {
+        "id": "1",
+        "description": "web_application_name",
+        "value": "Bludelego Web Application",
+        "created_at": "2018-01-17 14:17:00",
+        "updated_at": "2018-01-29 18:21:18"
+    },
+    {
+        "id": "2",
+        "description": "email_address_from",
+        "value": "noreply@bludelego.it",
+        "created_at": "2018-01-17 14:17:00",
+        "updated_at": "2018-01-21 23:38:13"
+    },
+    {
+        "id": "3",
+        "description": "email_name_from",
+        "value": "Bludelego Web Applcation",
+        "created_at": "2018-01-17 14:17:00",
+        "updated_at": "2018-01-17 14:17:00"
+    },
+    {
+        "id": "4",
+        "description": "email_logo_url",
+        "value": "/img/app_logo.png",
+        "created_at": "2018-01-17 14:17:00",
+        "updated_at": "2019-09-16 16:26:15"
+    },
+    {
+        "id": "5",
+        "description": "email_footer_text",
+        "value": "<p>&nbsp;</p><p>Email automatica inviata da Bludelego Web Application - Si prega di non rispondere</p>",
+        "created_at": "2018-01-17 14:17:00",
+        "updated_at": "2018-01-17 14:17:00"
+    },
+    {
+        "id": "6",
+        "description": "email_ccn_address",
+        "value": "radu@blueline.md",
+        "created_at": "2018-01-17 14:17:00",
+        "updated_at": "2018-01-22 13:27:50"
+    },
+    {
+        "id": "7",
+        "description": "web_application_url",
+        "value": "login",
+        "created_at": "2018-01-17 14:17:00",
+        "updated_at": "2018-01-17 14:17:00"
+    },
+    {
+        "id": "8",
+        "description": "favicon_url",
+        "value": "/img/favicon.ico",
+        "created_at": null,
+        "updated_at": "2019-09-16 16:26:00"
+    },
+    {
+        "id": "9",
+        "description": "meta_title",
+        "value": "Bludelego Web App",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "10",
+        "description": "app_header_logo_url",
+        "value": "/img/app_header_logo.png",
+        "created_at": null,
+        "updated_at": "2019-09-16 16:26:08"
+    },
+    {
+        "id": "11",
+        "description": "web_application_footer",
+        "value": "Copyright 2024 - <strong>Clinic</strong>",
+        "created_at": null,
+        "updated_at": "2020-01-30 11:47:41"
+    },
+    {
+        "id": "12",
+        "description": "login_logo_url",
+        "value": "/img/app_logo.png",
+        "created_at": "2018-02-05 20:04:52",
+        "updated_at": "2019-09-16 16:26:21"
+    },
+    {
+        "id": "13",
+        "description": "MAIL_DRIVER",
+        "value": "smtp",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "14",
+        "description": "MAIL_HOST",
+        "value": "smtp.office365.com",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "15",
+        "description": "MAIL_PORT",
+        "value": "587",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "16",
+        "description": "MAIL_USERNAME",
+        "value": "___@test.it",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "17",
+        "description": "MAIL_PASSWORD",
+        "value": "password",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "18",
+        "description": "MAIL_ENCRYPTION",
+        "value": "tls",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "19",
+        "description": "MAIL_FROM_ADDRESS",
+        "value": "____@test.it",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "20",
+        "description": "MAIL_FROM_NAME",
+        "value": "Name Projects Application",
+        "created_at": null,
+        "updated_at": null
+    },
+    {
+        "id": "21",
+        "description": "sitekey",
+        "value": "6LeSdv8ZAAAAAB3kxwJF2dKx2r-IXkn-wLC-5YTD",
+        "created_at": "2019-07-25 13:26:39",
+        "updated_at": "2020-12-22 10:33:20"
+    },
+    {
+        "id": "22",
+        "description": "secret",
+        "value": "6LeSdv8ZAAAAAGH1GiOLYwEQDzFvZk8e7eFUZeZL",
+        "created_at": "2019-07-25 13:26:56",
+        "updated_at": "2020-12-22 10:33:31"
+    },
+    {
+        "id": "23",
+        "description": "background_image_url",
+        "value": "/img/bg-1.png",
+        "created_at": "2019-09-10 11:58:37",
+        "updated_at": "2019-09-16 16:34:40"
+    }
+]

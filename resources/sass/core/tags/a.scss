@@ -1,0 +1,15 @@
+a {
+    color: #3097D1;
+    text-decoration: none;
+  }
+  
+  a:hover,
+  a:focus {
+    color: #216a94;
+    text-decoration: underline;
+  }
+  
+  a:focus {
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+  }

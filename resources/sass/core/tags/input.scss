@@ -1,0 +1,93 @@
+
+input[type=search] {
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
+  input[type=radio],
+  input[type=checkbox] {
+    margin: 4px 0 0;
+    margin-top: 1px \9;
+    line-height: normal;
+  }
+  
+  input[type=radio][disabled],
+  input[type=radio].disabled,
+  fieldset[disabled] input[type=radio],
+  input[type=checkbox][disabled],
+  input[type=checkbox].disabled,
+  fieldset[disabled] input[type=checkbox] {
+    cursor: not-allowed;
+  }
+  
+  input[type=file] {
+    display: block;
+  }
+  
+  input[type=range] {
+    display: block;
+    width: 100%;
+  }
+  input[type=file]:focus,
+  input[type=radio]:focus,
+  input[type=checkbox]:focus {
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+  }
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+  
+    input[type=date].form-control,
+    input[type=time].form-control,
+    input[type=datetime-local].form-control,
+    input[type=month].form-control {
+      line-height: 36px;
+    }
+  
+    input[type=date].input-sm,
+    .input-group-sm>input.form-control[type=date],
+    .input-group-sm>input.input-group-addon[type=date],
+    .input-group-sm>.input-group-btn>input.btn[type=date],
+    .input-group-sm input[type=date],
+    input[type=time].input-sm,
+    .input-group-sm>input.form-control[type=time],
+    .input-group-sm>input.input-group-addon[type=time],
+    .input-group-sm>.input-group-btn>input.btn[type=time],
+    .input-group-sm input[type=time],
+    input[type=datetime-local].input-sm,
+    .input-group-sm>input.form-control[type=datetime-local],
+    .input-group-sm>input.input-group-addon[type=datetime-local],
+    .input-group-sm>.input-group-btn>input.btn[type=datetime-local],
+    .input-group-sm input[type=datetime-local],
+    input[type=month].input-sm,
+    .input-group-sm>input.form-control[type=month],
+    .input-group-sm>input.input-group-addon[type=month],
+    .input-group-sm>.input-group-btn>input.btn[type=month],
+    .input-group-sm input[type=month] {
+      line-height: 30px;
+    }
+  
+    input[type=date].input-lg,
+    .input-group-lg>input.form-control[type=date],
+    .input-group-lg>input.input-group-addon[type=date],
+    .input-group-lg>.input-group-btn>input.btn[type=date],
+    .input-group-lg input[type=date],
+    input[type=time].input-lg,
+    .input-group-lg>input.form-control[type=time],
+    .input-group-lg>input.input-group-addon[type=time],
+    .input-group-lg>.input-group-btn>input.btn[type=time],
+    .input-group-lg input[type=time],
+    input[type=datetime-local].input-lg,
+    .input-group-lg>input.form-control[type=datetime-local],
+    .input-group-lg>input.input-group-addon[type=datetime-local],
+    .input-group-lg>.input-group-btn>input.btn[type=datetime-local],
+    .input-group-lg input[type=datetime-local],
+    input[type=month].input-lg,
+    .input-group-lg>input.form-control[type=month],
+    .input-group-lg>input.input-group-addon[type=month],
+    .input-group-lg>.input-group-btn>input.btn[type=month],
+    .input-group-lg input[type=month] {
+      line-height: 46px;
+    }
+  }

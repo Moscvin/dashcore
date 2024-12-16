@@ -1,0 +1,147 @@
+[
+    {
+        "description": "Dashboard",
+        "show": 0,
+        "id_parent": "0",
+        "list_order": "1",
+        "icon": "chart-line",
+        "link": "/home",
+        "permission": "X",
+        "children": []
+    },
+    {
+        "description": "ADMIN",
+        "show": 1,
+        "list_order": "0",
+        "icon": "cog",
+        "link": "#",
+        "permission": "X",
+        "children": [
+            {
+                "description": "Utenti",
+                "show": 1,
+                "list_order": "0",
+                "icon": "user",
+                "link": "#",
+                "permission": "X",
+                "children": [
+                    {
+                        "description": "Elenco Utenti",
+                        "show": 1,
+                        "id_parent": "18",
+                        "list_order": "0",
+                        "icon": "list",
+                        "link": "/core_users",
+                        "permission": "ADEVL",
+                        "children": []
+                    },
+                    {
+                        "description": "Gruppi",
+                        "show": 1,
+                        "id_parent": "18",
+                        "list_order": "1",
+                        "icon": "users",
+                        "link": "/core_groups",
+                        "permission": "ADEVL",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "description": "Menu",
+                "show": 1,
+                "list_order": "1",
+                "icon": "list-alt",
+                "link": "#",
+                "permission": "X",
+                "children": [
+                    {
+                        "description": "Pagine",
+                        "show": 1,
+                        "list_order": "0",
+                        "icon": "folder-open",
+                        "link": "/core_menus",
+                        "permission": "ADEVL",
+                        "children": []
+                    },
+                    {
+                        "description": "Autorizzazioni",
+                        "show": 1,
+                        "list_order": "1",
+                        "icon": "unlock-alt",
+                        "link": "/core_permissions_general",
+                        "permission": "ADEVL",
+                        "children": []
+                    },
+                    {
+                        "description": "Eccezioni",
+                        "show": 1,
+                        "list_order": "2",
+                        "icon": "asterisk",
+                        "link": "/core_permissions_exceptions",
+                        "permission": "ADEVL",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "description": "Indirizzi",
+                "show": 1,
+                "id_parent": "6",
+                "list_order": "2",
+                "icon": "envelope",
+                "link": "#",
+                "permission": "X",
+                "children": [
+                    {
+                        "description": "Nazioni",
+                        "show": 1,
+                        "id_parent": "20",
+                        "list_order": "0",
+                        "icon": "globe",
+                        "link": "/core_countries",
+                        "permission": "ADEVL",
+                        "children": []
+                    },
+                    {
+                        "description": "Province",
+                        "show": 1,
+                        "list_order": "1",
+                        "icon": "map-marker",
+                        "link": "/core_provinces",
+                        "permission": "ADEVL",
+                        "children": []
+                    },
+                    {
+                        "description": "Comuni",
+                        "show": 1,
+                        "list_order": "2",
+                        "icon": "university",
+                        "link": "/core_cities",
+                        "permission": "ADEVL",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "description": "Admin options",
+                "show": 1,
+                "id_parent": "6",
+                "list_order": "3",
+                "icon": "paperclip",
+                "link": "/core_admin_options",
+                "permission": "ADEVL",
+                "children": []
+            }
+        ]
+    },
+    {
+        "description": "Clienti",
+        "show": 1,
+        "list_order": "3",
+        "icon": "users",
+        "link": "/core_customers",
+        "permission": "ADEVL",
+        "children": []
+    }
+]
