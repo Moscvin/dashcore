@@ -23,4 +23,8 @@ class Doctor extends Model
     {
         return $this->belongsToMany(Specialization::class, 'doctor_specialization', 'doctor_id', 'specialization_id');
     }
+    public function reservationSlots()
+    {
+        return $this->hasMany(ReservationSlot::class, 'doctor_id');
+    }
 }

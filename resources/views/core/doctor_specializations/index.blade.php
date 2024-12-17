@@ -47,7 +47,7 @@
                                             </td>
                                             @if (in_array('E', $chars))
                                                 <td>
-                                                    <a href='{{ route('doctor_specialization.edit', $doctorSpecialization->doctor->id) }}'
+                                                    <a href='{{ route('doctor_specialization.edit', $doctorSpecialization->id) }}'
                                                         class='btn btn-xs btn-info' title='Modifica'>
                                                         <i class='fas fa-edit'></i>
                                                     </a>
@@ -55,7 +55,7 @@
                                             @endif
                                             @if (in_array('D', $chars))
                                                 <td>
-                                                    <button onclick='deleteDoctorSpecialization(this)'
+                                                    <button onclick='doctorSpecializationDeleteItem(this)'
                                                         data-id='{{ $doctorSpecialization->id }}' type='button'
                                                         class='action_del btn btn-xs btn-danger' title='Elimina'>
                                                         <i class='fa fa-trash'></i>
@@ -74,8 +74,8 @@
     </div>
 
     @if (in_array('D', $chars))
-        <x-core.modals.modal-delete-item prefix='doctorSpecialization' action='eliminare la specializzazione'
-            url='doctor_specializations' tableId='table' />
+        <x-core.modals.modal-delete-item prefix='doctorSpecialization' action='eliminare il doctor' url='doctor_specialization'
+            tableId='table' />
     @endif
 @endsection
 
@@ -144,21 +144,5 @@
                 }
             });
         });
-
-        function deleteDoctorSpecialization(button) {
-            const id = $(button).data('id');
-            if (confirm('Sei sicuro di voler eliminare questa specializzazione?')) {
-                $.ajax({
-                    url: `/doctor_specializations/${id}`,
-                    type: 'DELETE',
-                    success: function(response) {
-                        location.reload();
-                    },
-                    error: function(error) {
-                        alert('Errore durante l\'eliminazione');
-                    }
-                });
-            }
-        }
     </script>
 @endsection

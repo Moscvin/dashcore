@@ -42,8 +42,7 @@
                                                 class="form-control select2" required>
                                                 <option value="">Selectați o specializare</option>
                                                 @foreach ($specializations as $specialization)
-                                                    <option value="{{ $specialization->id }}"
-                                                        {{ old('specialization_id') == $specialization->id ? 'selected' : '' }}>
+                                                    <option value="{{ $specialization->id }}">
                                                         {{ $specialization->specialization_name }}
                                                     </option>
                                                 @endforeach
@@ -55,23 +54,18 @@
                                             <label class="required">Doctor</label>
                                             <select id="doctor" name="doctor_id" class="form-control select2" required>
                                                 <option value="">Selectați un doctor</option>
-                                                {{-- Doctorii vor fi încărcați dinamic aici --}}
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="required">Timpul Rezervării</label>
-                                            <select name="reservation_slot_id" class="form-control select2" required>
+                                            <select id="reservation_slot" name="reservation_slot_id"
+                                                class="form-control select2" required>
                                                 <option value="">Selectați un timp</option>
-                                                @foreach ($reservationSlots as $slot)
-                                                    <option value="{{ $slot->id }}"
-                                                        {{ old('reservation_slot_id') == $slot->id ? 'selected' : '' }}>
-                                                        {{ $slot->time }}
-                                                    </option>
-                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -98,22 +92,19 @@
     <script src="/js/core/libraries/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Initialize Select2
             $('.select2').select2({
                 theme: 'dashcore',
                 width: '100%'
             });
-
-            // Detect change on specialization dropdown
             $('#specialization').on('change', function() {
-                const specializationId = $(this).val(); // Get the selected specialization ID
+                const specializationId = $(this).val();
                 const doctorSelect = $('#doctor');
+                const slotSelect = $('#reservation_slot');
 
-                // Clear existing doctor options
-                doctorSelect.html('<option value="">Selectați un doctor</option>');
+                doctorSelect.html('<option value="">Select a doctor</option>');
+                slotSelect.html('<option value="">Select a time</option>');
 
                 if (specializationId) {
-                    // Make AJAX call to fetch doctors
                     $.ajax({
                         url: "{{ route('core_reservations.doctors') }}",
                         type: 'GET',
@@ -129,6 +120,34 @@
                         },
                         error: function() {
                             alert('Eroare la încărcarea doctorilor. Încercați din nou.');
+                        }
+                    });
+                }
+            });
+
+            // Când selectăm doctorul, încărcăm sloturile disponibile
+            $('#doctor').on('change', function() {
+                const doctorId = $(this).val();
+                const slotSelect = $('#reservation_slot');
+
+                slotSelect.html('<option value="">Selectați un timp</option>');
+
+                if (doctorId) {
+                    $.ajax({
+                        url: "{{ route('core_reservations.slots') }}",
+                        type: 'GET',
+                        data: {
+                            doctor_id: doctorId
+                        },
+                        success: function(slots) {
+                            slots.forEach(function(slot) {
+                                slotSelect.append(
+                                    `<option value="${slot.id}">${slot.time}</option>`
+                                );
+                            });
+                        },
+                        error: function() {
+                            alert('Eroare la încărcarea sloturilor. Încercați din nou.');
                         }
                     });
                 }

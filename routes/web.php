@@ -172,6 +172,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::group(['middleware' => 'auth'], function () {
                 Route::group(['as' => 'core_reservations.', 'prefix' => 'core_reservations', 'controller' => ReservationController::class], function () {
                     Route::get('/doctors', 'getDoctorsBySpecialization')->name('doctors');
+                    // Route::get('/doctors-by-slot', 'getDoctorByReservationSlot')->name('doctors_by_slot');
+                    Route::get('/core_reservations/slots', 'getAvailableSlots')->name('slots');
                     Route::get('/', 'index')->name('index');
                     Route::get('/ajax', 'ajax')->name('ajax');
                     Route::get('/create', 'create')->name('create');

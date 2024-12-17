@@ -71,12 +71,13 @@ class DoctorSpecializationController extends BaseController
         return redirect()->route('doctor_specialization.index');
     }
 
-    public function destroy($id)
+    public function destroy(DoctorSpecialization $doctorSpecialization)
     {
         if (!in_array('D', $this->chars)) return redirect('/no_permission');
 
-        DoctorSpecialization::destroy($id);
-        Session::flash('success', 'Il dottore è stato eliminato!');
-        return redirect()->route('core.doctor_specializations.index');
+        $doctorSpecialization->delete();
+
+
+        return response()->json([], 204);
     }
 }

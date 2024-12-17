@@ -197,4 +197,32 @@ class ReservationController extends BaseController
 
         return response()->json($doctors);
     }
+    // public function getDoctorByReservationSlot(Request $request)
+    // {
+    //     $reservationSlotId = $request->input('reservation_slot_id');
+
+    //     if (!$reservationSlotId) {
+    //         return response()->json(['error' => 'Reservation Slot ID is required'], 400);
+    //     }
+
+    //     $doctor = Doctor::whereHas('reservationSlots', function ($query) use ($reservationSlotId) {
+    //         $query->where('id', $reservationSlotId);
+    //     })->get();
+
+    //     return response()->json($doctor);
+    // }
+    public function getAvailableSlots(Request $request)
+    {
+        $doctorId = $request->input('doctor_id');
+
+        if (!$doctorId) {
+            return response()->json(['error' => 'Doctor ID is required'], 400);
+        }
+
+        $slots = ReservationSlot::where('doctor_id', $doctorId)
+            ->where('is_booked', false)
+            ->get();
+
+        return response()->json($slots);
+    }
 }
