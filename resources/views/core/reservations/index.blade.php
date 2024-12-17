@@ -68,7 +68,7 @@
                                     <th>Doctor</th>
                                     <th>Specialization</th>
                                     <th>Time </th>
-                                    <th>Status</th>
+                                    {{-- <th>Status</th> --}}
                                     @if (in_array("V", $chars))
                                     <th class="action_btn nosorting"></th>
                                     @endif

@@ -40,7 +40,7 @@ class ReservationController extends BaseController
                 $item->doctor->name ?? '',
                 $item->specialization->specialization_name ?? '',
                 $item->reservationSlot->time ?? '',
-                $item->status ?? '',
+                // $item->status ?? '',
             ];
 
 
@@ -62,12 +62,12 @@ class ReservationController extends BaseController
                 );
             }
             if (in_array("L", $this->chars)) {
-                $btnClass = $item->active == 1 ? 'warning' : 'primary';
-                $icon = $item->active == 1 ? 'lock' : 'unlock';
-                $title = $item->active == 1 ? 'Nascondi' : 'Mostra';
+                $btnClass = $item->status == 1 ? 'warning' : 'primary';
+                $icon = $item->status == 1 ? 'lock' : 'unlock';
+                $title = $item->status == 1 ? 'Nascondi' : 'Mostra';
                 array_push(
                     $items[$index],
-                    "<button onclick='reservationLockItem(this)' title=\"$title\"  data-id=\"$item->id\" data-current=\"$item->active\"
+                    "<button onclick='reservationLockItem(this)' title=\"$title\"  data-id=\"$item->id\" data-current=\"$item->status\"
                             type=\"button\" class=\"action_block btn btn-xs btn-$btnClass\">
                         <i class=\"fa fa-$icon\"></i>
                     </button>"
@@ -160,7 +160,8 @@ class ReservationController extends BaseController
         if (!in_array('L', $this->chars)) return redirect('/no_permission');
 
         $coreReservation->update([
-            'active' => !$request->lock,
+            'status' => $request->lock ? '0' : '1',
+
         ]);
 
         return response()->json(['status' => 'Success'], 200);
