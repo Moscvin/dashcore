@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Core;
 
-use App\Models\Specialization;
-use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\CoreSlotRequest;
 use Illuminate\Support\Facades\Session;
-USE App\Models\ReservationSlot;
+use App\Models\ReservationSlot;
+use App\Models\Doctor;
 
 class ReservationSlotController extends BaseController
 {
@@ -15,47 +14,56 @@ class ReservationSlotController extends BaseController
     {
         if (empty($this->chars)) return redirect('/no_permission');
 
-        $coreSlots = ReservationSlot::get();
-        return view('core.reservations_slots.index', compact('coreSlots'));
+        $reservationSlots = ReservationSlot::with('doctor')->get();
+        return view('core.reservations_slots.index', compact('reservationSlots'));
     }
     public function create()
     {
         if (!in_array('A', $this->chars)) return redirect('/no_permission');
-
-        return view('core.reservations_slots.create');
+        $doctors = Doctor::all();
+        return view('core.reservations_slots.create', compact('doctors'));
     }
     public function store(CoreSlotRequest $request)
     {
         if (!in_array('A', $this->chars)) return redirect('/no_permission');
 
-        ReservationSlot::create(['time' => $request->time]);
+        ReservationSlot::create([
+            'time' => $request->time,
+            'doctor_id' => $request->doctor_id,
+            'is_booked' => $request->is_booked ?? false,
+        ]);
 
         Session::flash('success', 'Il specialization_name è stato aggiunto!');
-        
+
         return redirect()->route('core_reservations_slots.index');
     }
 
-    public function edit(ReservationSlot $coreSlots)
+    public function edit(ReservationSlot $reservationSlot)
     {
         if (!in_array('E', $this->chars)) return redirect('/no_permission');
-        return view('core.reservations_slots.edit', compact('coreSlots'));
+
+        $doctors = Doctor::all();
+        return view('core.reservations_slots.edit', compact('reservationSlot', 'doctors'));
     }
 
-    public function update(CoreSlotRequest $request, ReservationSlot $coreSlots)
+    public function update(CoreSlotRequest $request, ReservationSlot $reservationSlot)
     {
         if (!in_array('E', $this->chars)) return redirect('/no_permission');
-
-        $coreSlots->update(['time' => $request->time]);
+        $reservationSlot->update([
+            'time' => $request->time,
+            'doctor_id' => $request->doctor_id,
+            'is_booked' => $request->is_booked ?? false,
+        ]);
 
         Session::flash('success', 'Le modifiche sono state correttamente salvate!');
         return redirect()->route('core_reservations_slots.index');
     }
 
-    public function destroy(ReservationSlot $coreSlots)
+    public function destroy(ReservationSlot $reservationSlot)
     {
         if (!in_array('D', $this->chars)) return redirect('/no_permission');
 
-        $coreSlots->delete();
+        $reservationSlot->delete();
 
         return response()->json([], 204);
     }

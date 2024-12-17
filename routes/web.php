@@ -79,10 +79,10 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                     Route::group(['as' => 'core_reservations_slots.', 'prefix' => 'core_reservations_slots', 'controller' => ReservationSlotController::class], function () {
                         Route::get('/', 'index')->name('index');
                         Route::get('/create', 'create')->name('create');
-                        Route::get('/{coreSlots}/edit', 'edit')->name('edit');
-                        Route::patch('/{coreSlots}', 'update')->name('update');
+                        Route::get('/{reservationSlot}/edit', 'edit')->name('edit');
+                        Route::patch('/{reservationSlot}', 'update')->name('update');
                         Route::post('/', 'store')->name('store');
-                        Route::delete('/{coreSlots}', 'destroy')->name('destroy');
+                        Route::delete('/{reservationSlot}', 'destroy')->name('destroy');
                     });
                     Route::group(['as' => 'core_specialization.', 'prefix' => 'core_specialization', 'controller' => SpecializationController::class], function () {
                         Route::get('/', 'index')->name('index');

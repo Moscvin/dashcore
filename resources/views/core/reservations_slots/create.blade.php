@@ -1,9 +1,8 @@
 @extends('core.layouts.page')
 
-
 @section('content_header')
     <h1>
-        Time<small>Elenco time</small>
+        Time-Slot <small>Nuovo time</small>
     </h1>
 @stop
 
@@ -31,8 +30,8 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3>Nuovo time</h3>
-                        @if (count($errors) > 0)
+                        <h3>Nuovo Time-Slot</h3>
+                        @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
                                     @foreach ($errors->all() as $error)
@@ -46,27 +45,46 @@
                     <div class="box-body">
                         <form method="POST" action="{{ route('core_reservations_slots.store') }}">
                             @csrf
+                            <!-- Time-Slot Input -->
                             <div class="row form-group">
-                                <div class="col-md-12">
-                                    <div class="col-md-3">
-                                        <label class="col-form-label required">Time-Slot:</label>
-                                        <input class="form-control" name="time" value="{{ old('time') }}" />
-                                    </div>
+                                <div class="col-md-6">
+                                    <label class="col-form-label required">Time-Slot:</label>
+                                    <input class="form-control" name="time" value="{{ old('time') }}" />
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
-                                <a class="btn btn-warning pull-left" href="{{ route('core_reservations_slots.index') }}">
-                                    <i class="fas fa-times"></i> Annulla
-                                </a>
-                                <button class="btn btn-primary pull-right">
-                                    <i class="fas fa-save"></i> Salva
-                                </button>
+                            <!-- Doctor Dropdown -->
+                            <div class="row form-group">
+                                <div class="col-md-6">
+                                    <label class="col-form-label required">Doctor:</label>
+                                    <select class="form-control" name="doctor_id" required>
+                                        <option value="">-- Seleziona un Doctor --</option>
+                                        @foreach ($doctors as $doctor)
+                                            <option value="{{ $doctor->id }}"
+                                                {{ old('doctor_id') == $doctor->id ? 'selected' : '' }}>
+                                                {{ $doctor->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <a class="btn btn-warning pull-left"
+                                        href="{{ route('core_reservations_slots.index') }}">
+                                        <i class="fas fa-times"></i> Annulla
+                                    </a>
+                                    <button type="submit" class="btn btn-primary pull-right">
+                                        <i class="fas fa-save"></i> Salva
+                                    </button>
+                                </div>
                             </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    </div> 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
 @endsection

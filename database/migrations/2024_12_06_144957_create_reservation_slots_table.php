@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('reservation_slots', function (Blueprint $table) {
             $table->id();
-            $table->string('time');
+            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
+            $table->dateTime('time');
+            $table->boolean('is_booked')->default(false);
             $table->timestamps();
         });
     }

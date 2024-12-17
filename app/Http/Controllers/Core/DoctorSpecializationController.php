@@ -27,7 +27,7 @@ class DoctorSpecializationController extends BaseController
         $doctors = Doctor::all();
         $specializations = Specialization::all();
 
-        return view('core.doctor_specializations.create',compact('doctors', 'specializations'));
+        return view('core.doctor_specializations.create', compact('doctors', 'specializations'));
     }
 
     public function store(CoreSpecializationDoctorRequest $request)

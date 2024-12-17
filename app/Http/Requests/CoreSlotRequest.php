@@ -23,7 +23,18 @@ class CoreSlotRequest extends FormRequest
     {
         return [
             'time' => ['required', 'date_format:Y-m-d H:i'],
-
+            'doctor_id' => ['required', 'exists:doctors,id'],
+            'is_booked' => ['nullable', 'boolean'],
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'time.required' => 'Il campo time è obbligatorio',
+            'time.date_format' => 'Il campo time deve essere una data valida',
+            'doctor_id.required' => 'Il campo doctor_id è obbligatorio',
+            'doctor_id.exists' => 'Il campo doctor_id deve esistere nella tabella doctors',
+            'is_booked.boolean' => 'Il campo is_booked deve essere un booleano',
         ];
     }
 }
