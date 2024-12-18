@@ -43,7 +43,9 @@
                                         <th>Client</th>
                                         <th>Doctor</th>
                                         <th>Specialization</th>
-                                        <th>Time</th>
+                                        @if (isset($showTimeColumn) && $showTimeColumn)
+                                            <th>Time</th>
+                                        @endif
                                         @if (in_array('V', $chars))
                                             <th class="action_btn nosorting"></th>
                                         @endif
@@ -61,6 +63,7 @@
                                 <tbody>
                                 </tbody>
                             </table>
+
                         </div>
                     </div>
                 </div>

@@ -21,6 +21,7 @@ class CoreReservationRequest extends FormRequest
      */
     public function rules(): array
     {
+        // dd($this);
         return [
             'specialization_id' => 'required|exists:specializations,id',
             'slot_times' => 'required|array|min:1', 

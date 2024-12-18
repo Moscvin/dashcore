@@ -20,7 +20,6 @@ class ReservationController extends BaseController
     public function index()
     {
         if (empty($this->chars)) return redirect('/no_permission');
-
         return view('core.reservations.index');
     }
 
@@ -32,12 +31,10 @@ class ReservationController extends BaseController
         $index = 0;
         $items = [];
         foreach ($dataTable->items as $item) {
-            $slotTimes = $item->reservationSlots->pluck('time')->toArray();
             $items[$index] = [
                 $item->coreUser->username ?? '',
                 $item->doctor->name ?? '',
                 $item->specialization->specialization_name ?? '',
-                implode(', ', $slotTimes),
             ];
 
             if (in_array("V", $this->chars)) {
@@ -62,8 +59,8 @@ class ReservationController extends BaseController
                 $title = $item->status == 1 ? 'Ascunde' : 'Afișează';
                 array_push(
                     $items[$index],
-                    "<button onclick='reservationLockItem(this)' title=\"$title\"  data-id=\"$item->id\" data-current=\"$item->status\"
-                        type=\"button\" class=\"action_block btn btn-xs btn-$btnClass\">
+                    "<button onclick='reservationLockItem(this)' title=\"$title\" data-id=\"$item->id\" data-current=\"$item->status\"
+                    type=\"button\" class=\"action_block btn btn-xs btn-$btnClass\">
                     <i class=\"fa fa-$icon\"></i>
                 </button>"
                 );
@@ -73,7 +70,7 @@ class ReservationController extends BaseController
                 array_push(
                     $items[$index],
                     "<button onclick='reservationDeleteItem(this)' data-id=\"$item->id\" type=\"button\"
-                        class=\"action_del btn btn-xs btn-danger\" title=\"Șterge\">
+                    class=\"action_del btn btn-xs btn-danger\" title=\"Șterge\">
                     <i class=\"fa fa-trash\"></i>
                 </button>"
                 );
@@ -92,8 +89,6 @@ class ReservationController extends BaseController
         ]);
     }
 
-
-
     public function create()
     {
         if (!in_array('A', $this->chars)) return redirect('/no_permission');
@@ -105,8 +100,16 @@ class ReservationController extends BaseController
 
     public function store(CoreReservationRequest $request)
     {
-        if (!in_array('A', $this->chars)) return redirect('/no_permission');
-
+        if (!in_array('A', $this->chars)) {
+            return redirect('/no_permission');
+        }
+        $existingReservation = Reservation::where('core_user_id', Auth::id())
+            ->where('specialization_id', $request->specialization_id)
+            ->first();
+        if ($existingReservation) {
+            Session::flash('error', 'You already have a reservation with this specialization.');
+            return redirect()->route('core_reservations.index');
+        }
 
         $reservation = Reservation::create([
             'core_user_id' => Auth::id(),
@@ -116,6 +119,7 @@ class ReservationController extends BaseController
             'status' => '0',
         ]);
 
+
         foreach ($request->slot_times as $slotTime) {
             ReservationSlot::create([
                 'time' => $slotTime,
@@ -124,12 +128,10 @@ class ReservationController extends BaseController
                 'is_booked' => false,
             ]);
         }
-        // dd($request->all());
 
-        Session::flash('success', 'Rezervarea și sloturile au fost adăugate!');
+        Session::flash('success', 'Reservation is created successfully!');
         return redirect('/core_reservations');
     }
-
 
     public function show(Reservation $coreReservation)
     {
@@ -142,24 +144,43 @@ class ReservationController extends BaseController
     {
         if (!in_array('E', $this->chars)) return redirect('/no_permission');
 
+        if ($coreReservation->status == 1) {
+            Session::flash('error', 'Reservation is blocked!');
+            return redirect()->route('core_reservations.index');
+        }
 
         $clients = CoreUser::all();
         $doctors = Doctor::all();
         $specializations = Specialization::all();
         $reservationSlots = ReservationSlot::all();
 
-
         return view('core.reservations.edit', compact('coreReservation', 'clients', 'doctors', 'specializations', 'reservationSlots'));
     }
-
     public function update(CoreReservationRequest $request, Reservation $coreReservation)
     {
-        if (!in_array('E', $this->chars)) return redirect('/no_permission');
+        if ($coreReservation->status != 0) {
+            return redirect()->route('core_reservations.index')->with('error', 'Reservation is locked and cannot be modified.');
+        }
 
-        $coreReservation->update($request->validated());
 
-        Session::flash('success', 'Le modifiche son salavate!');
-        return redirect('/core_reservations');
+        $coreReservation->update([
+            'specialization_id' => $request->specialization_id,
+            'doctor_id' => $request->doctor_id,
+        ]);
+
+
+        $coreReservation->reservationSlots()->delete();
+
+        foreach ($request->slot_times as $slotTime) {
+            $coreReservation->reservationSlots()->create([
+                'time' => $slotTime,
+                'doctor_id' => $request->doctor_id,
+                'is_booked' => false,
+            ]);
+        }
+
+        Session::flash('success', 'Reservation is updated successfully!');
+        return redirect()->route('core_reservations.index');
     }
 
     public function lock(Request $request, Reservation $coreReservation)
@@ -179,15 +200,15 @@ class ReservationController extends BaseController
 
         return response()->json(['status' => 'Success'], 204);
     }
-    private function fillCoreReservation($request)
-    {
-        return [
-            'core_user_id' => $request->core_user_id,
-            'doctor_id' => $request->doctor_id,
-            'specialization_id' => $request->specialization_id,
-            'reservation_slot_id' => $request->reservation_slot_id,
-        ];
-    }
+    // private function fillCoreReservation($request)
+    // {
+    //     return [
+    //         'core_user_id' => $request->core_user_id,
+    //         'doctor_id' => $request->doctor_id,
+    //         'specialization_id' => $request->specialization_id,
+    //         'reservation_slot_id' => $request->reservation_slot_id,
+    //     ];
+    // }
     public function getDoctorsBySpecialization(Request $request)
     {
         $specializationId = $request->input('specialization_id');
@@ -201,23 +222,23 @@ class ReservationController extends BaseController
 
         return response()->json($doctors);
     }
-    public function getAvailableSlots(Request $request)
-    {
-        $doctorId = $request->input('doctor_id');
+    // public function getAvailableSlots(Request $request)
+    // {
+    //     $doctorId = $request->input('doctor_id');
 
-        if (!$doctorId) {
-            return response()->json(['error' => 'Doctor ID is required'], 400);
-        }
+    //     if (!$doctorId) {
+    //         return response()->json(['error' => 'Doctor ID is required'], 400);
+    //     }
 
-        $slots = ReservationSlot::where('doctor_id', $doctorId)
-            ->where('is_booked', false)
-            ->get();
+    //     $slots = ReservationSlot::where('doctor_id', $doctorId)
+    //         ->where('is_booked', false)
+    //         ->get();
 
-        return response()->json($slots);
-    }
-    public function availableSlots($doctorId)
-    {
-        $slots = ReservationSlot::availableForDoctor($doctorId)->get();
-        return view('core.reservation_slots.available', compact('slots'));
-    }
+    //     return response()->json($slots);
+    // }
+    // public function availableSlots($doctorId)
+    // {
+    //     $slots = ReservationSlot::availableForDoctor($doctorId)->get();
+    //     return view('core.reservation_slots.available', compact('slots'));
+    // }
 }
