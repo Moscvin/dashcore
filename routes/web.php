@@ -76,7 +76,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                         Route::post('/', 'store')->name('store');
                         Route::delete('/{doctorSpecialization}', 'destroy')->name('destroy');
                     });
-                    Route::group(['as' => 'core_reservations_slots.', 'prefix' => 'core_reservations_slots', 'controller' => ReservationSlotController::class], function () {
+                    Route::group(['as' => 'core_reservation_slots.', 'prefix' => 'core_reservation_slots', 'controller' => ReservationSlotController::class], function () {
                         Route::get('/', 'index')->name('index');
                         Route::get('/create', 'create')->name('create');
                         Route::get('/{reservationSlot}/edit', 'edit')->name('edit');

@@ -18,7 +18,7 @@
                         <h3 id="entityTitle">Elenco dei time</h3>
 
                         @if (in_array('A', $chars))
-                            <a href='{{ route('core_reservations_slots.create') }}' class='btn btn-primary'>
+                            <a href='{{ route('core_reservation_slots.create') }}' class='btn btn-primary'>
                                 <i class='fas fa-plus'></i> Nuovo Time
                             </a>
                         @endif
@@ -46,7 +46,7 @@
                                             <td>{{ $reservationSlot->doctor->name ?? 'N/A' }}</td>
                                             @if (in_array('E', $chars))
                                                 <td>
-                                                    <a href='{{ route('core_reservations_slots.edit', $reservationSlot->id) }}'
+                                                    <a href='{{ route('core_reservation_slots.edit', $reservationSlot->id) }}'
                                                         class='btn btn-xs btn-info' title='Modifica'>
                                                         <i class='fas fa-edit'></i>
                                                     </a>
@@ -75,7 +75,7 @@
 
     @if (in_array('D', $chars))
         <x-core.modals.modal-delete-item prefix='coreReservationSlot' action='eliminare il group'
-            url='core_reservations_slots' tableId='table' />
+            url='core_reservation_slots' tableId='table' />
     @endif
 @endsection
 

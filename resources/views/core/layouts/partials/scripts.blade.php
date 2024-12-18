@@ -19,7 +19,7 @@
         $(".sidebar a").on("click", function(){
             document.location.href = this.href;
         });
-/*        $(".drop_flex-user").on("click", function(){
+        $(".drop_flex-user").on("click", function(){
             var mouse_is_inside = null;
             $(".dropdown-menu").addClass("block");
             $(this).hover(function(){
@@ -31,6 +31,6 @@
             $("body").mouseup(function(){
                 if(! mouse_is_inside) $('.dropdown-menu').removeClass('block');
             });
-        });*/
+        });
     });
 </script>

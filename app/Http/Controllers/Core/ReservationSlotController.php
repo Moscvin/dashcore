@@ -35,7 +35,7 @@ class ReservationSlotController extends BaseController
 
         Session::flash('success', 'Il specialization_name è stato aggiunto!');
 
-        return redirect()->route('core_reservations_slots.index');
+        return redirect()->route('core_reservation_slots.index');
     }
 
     public function edit(ReservationSlot $reservationSlot)
@@ -56,7 +56,7 @@ class ReservationSlotController extends BaseController
         ]);
 
         Session::flash('success', 'Le modifiche sono state correttamente salvate!');
-        return redirect()->route('core_reservations_slots.index');
+        return redirect()->route('core_reservation_slots.index');
     }
 
     public function destroy(ReservationSlot $reservationSlot)

@@ -43,7 +43,7 @@
                     </div>
 
                     <div class='box-body'>
-                        <form method='POST' action='{{ route('core_reservations_slots.update', $reservationSlot->id) }}'>
+                        <form method='POST' action='{{ route('core_reservation_slots.update', $reservationSlot->id) }}'>
                             @method('PATCH')
                             @csrf
 
@@ -74,7 +74,7 @@
                             <div class='row'>
                                 <div class='col-md-12'>
                                     <a class='btn btn-warning pull-left'
-                                        href='{{ route('core_reservations_slots.index') }}'>
+                                        href='{{ route('core_reservation_slots.index') }}'>
                                         <i class='fas fa-times'></i> Annulla
                                     </a>
                                     <button type='submit' class='btn btn-primary pull-right'>

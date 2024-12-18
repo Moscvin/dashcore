@@ -43,7 +43,7 @@
                     </div>
 
                     <div class="box-body">
-                        <form method="POST" action="{{ route('core_reservations_slots.store') }}">
+                        <form method="POST" action="{{ route('core_reservation_slots.store') }}">
                             @csrf
                             <!-- Time-Slot Input -->
                             <div class="row form-group">
@@ -73,7 +73,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <a class="btn btn-warning pull-left"
-                                        href="{{ route('core_reservations_slots.index') }}">
+                                        href="{{ route('core_reservation_slots.index') }}">
                                         <i class="fas fa-times"></i> Annulla
                                     </a>
                                     <button type="submit" class="btn btn-primary pull-right">

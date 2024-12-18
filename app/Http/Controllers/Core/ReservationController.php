@@ -12,8 +12,6 @@ use App\Models\ReservationSlot;
 use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ReservationMail;
 use Illuminate\Support\Facades\Auth;
 
 

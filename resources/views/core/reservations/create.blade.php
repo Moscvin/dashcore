@@ -124,8 +124,6 @@
                     });
                 }
             });
-
-            // Când selectăm doctorul, încărcăm sloturile disponibile
             $('#doctor').on('change', function() {
                 const doctorId = $(this).val();
                 const slotSelect = $('#reservation_slot');
