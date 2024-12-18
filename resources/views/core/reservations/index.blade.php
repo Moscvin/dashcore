@@ -92,6 +92,11 @@
                 paging: true,
                 serverSide: true,
                 processing: true,
+                createdRow: function(row, data, dataIndex) {
+                    if (data['active'] != 1) {
+                        $(row).addClass('locked');
+                    }
+                },
                 buttons: [{
                         extend: 'excel',
                         className: 'btn btn-success btn-sm',

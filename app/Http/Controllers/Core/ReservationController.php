@@ -32,6 +32,7 @@ class ReservationController extends BaseController
         $items = [];
         foreach ($dataTable->items as $item) {
             $items[$index] = [
+                'active' => $item->status,
                 $item->coreUser->username ?? '',
                 $item->doctor->name ?? '',
                 $item->specialization->specialization_name ?? '',
