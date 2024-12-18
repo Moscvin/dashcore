@@ -43,7 +43,7 @@
                                 <tbody>
                                     @foreach ($reservationSlots as $reservationSlot)
                                         <tr>
-                                            <td>{{ $reservationSlot->doctor->name }}</td>
+                                            <td>{{ $reservationSlot->doctor->name ?? null }}</td>
                                             <td>{{ \Carbon\Carbon::parse($reservationSlot->time)->format('d-m-Y H:i:s') }}
                                             </td>
                                             <td>{{ $reservationSlot->is_booked }}</td>

@@ -7,6 +7,7 @@ use App\Http\Requests\CoreSlotRequest;
 use Illuminate\Support\Facades\Session;
 use App\Models\ReservationSlot;
 use App\Models\Doctor;
+use Illuminate\Support\Carbon;
 
 class ReservationSlotController extends BaseController
 {
@@ -42,6 +43,7 @@ class ReservationSlotController extends BaseController
     {
         if (!in_array('E', $this->chars)) return redirect('/no_permission');
 
+        $reservationSlot->time = Carbon::parse($reservationSlot->time)->format('d-m-Y H:i');
         $doctors = Doctor::all();
         return view('core.reservations_slots.edit', compact('reservationSlot', 'doctors'));
     }
@@ -50,7 +52,7 @@ class ReservationSlotController extends BaseController
     {
         if (!in_array('E', $this->chars)) return redirect('/no_permission');
         $reservationSlot->update([
-            'time' => \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $request->time)->toDateTimeString(),
+            'time' => \Carbon\Carbon::createFromFormat('d-m-Y H:i', $request->time)->toDateTimeString(),
             'doctor_id' => $request->doctor_id,
             'is_booked' => $request->is_booked ?? false,
         ]);

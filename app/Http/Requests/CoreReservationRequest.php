@@ -22,10 +22,22 @@ class CoreReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'doctor_id' => 'required|exists:doctors,id',
             'specialization_id' => 'required|exists:specializations,id',
-            'reservation_slot_id' => 'required|exists:reservation_slots,id',
-            'status' => 'in:0,1',
+            'slot_times' => 'required|array|min:1', 
+            'slot_times.*' => 'required|date|after:now',
+        ];
+    }
+    public function messages()
+    {
+        return[
+            'specialization_id.required' => 'Il campo specialization_id è obbligatorio',
+            'specialization_id.exists' => 'Il campo specialization_id deve esistere nella tabella specializations',
+            'slot_times.required' => 'Il campo slot_times è obbligatorio',
+            'slot_times.array' => 'Il campo slot_times deve essere un array',
+            'slot_times.min' => 'Il campo slot_times deve avere almeno un elemento',
+            'slot_times.*.required' => 'Il campo slot_times deve avere almeno un elemento',
+            'slot_times.*.date' => 'Il campo slot_times deve essere una data valida',
+            'slot_times.*.after' => 'Il campo slot_times deve essere una data futura',
         ];
     }
 }

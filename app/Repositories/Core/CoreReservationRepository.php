@@ -12,11 +12,11 @@ class CoreReservationRepository extends BaseRepository
     {
         $query = clone $this->query;
         $query = $query
-            ->join('core_users', 'reservations.core_user_id', '=', 'core_users.id')
-            ->join('doctors', 'reservations.doctor_id', '=', 'doctors.id')
-            ->join('doctor_specialization', 'doctors.id', '=', 'doctor_specialization.doctor_id')
-            ->join('specializations', 'doctor_specialization.specialization_id', '=', 'specializations.id')
-            ->join('reservation_slots', 'reservations.reservation_slot_id', '=', 'reservation_slots.id');
+            ->leftJoin('core_users', 'reservations.core_user_id', '=', 'core_users.id')
+            ->leftJoin('doctors', 'reservations.doctor_id', '=', 'doctors.id')
+            ->leftJoin('doctor_specialization', 'doctors.id', '=', 'doctor_specialization.doctor_id')
+            ->leftJoin('specializations', 'doctor_specialization.specialization_id', '=', 'specializations.id')
+            ->leftJoin('reservation_slots', 'reservations.reservation_slot_id', '=', 'reservation_slots.id');
 
         $recordsTotalCount = (clone $query)->count();
 

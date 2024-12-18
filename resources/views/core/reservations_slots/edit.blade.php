@@ -8,6 +8,12 @@
 
 @section('css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .required:after {
+            content: " *";
+            color: red;
+        }
+    </style>
 @stop
 
 @section('scripts')
@@ -17,7 +23,7 @@
             flatpickr("input[name='time']", {
                 enableTime: true,
                 noCalendar: false,
-                dateFormat: "Y-m-d H:i",
+                dateFormat: "d-m-Y H:i",
                 time_24hr: true
             });
         });
@@ -50,8 +56,8 @@
                             <div class="row form-group">
                                 <div class="col-md-6">
                                     <label class="col-form-label required">Time-Slot:</label>
-                                    <input class="form-control" name="time"
-                                        value="{{ old('time', $reservationSlot->time) }}" />
+                                    <input type="text" class="form-control" name="time"
+                                        value="{{ old('time', \Carbon\Carbon::parse($reservationSlot->time)->format('d-m-Y H:i:s')) }}" />
                                 </div>
                             </div>
 
@@ -59,7 +65,7 @@
                                 <div class="col-md-6">
                                     <label class="col-form-label required">Doctor:</label>
                                     <select class="form-control" name="doctor_id" required>
-                                        <option value="">-- Seleziona un Doctor --</option>
+                                        <option value="">-- Selectați un Doctor --</option>
                                         @foreach ($doctors as $doctor)
                                             <option value="{{ $doctor->id }}"
                                                 {{ $reservationSlot->doctor_id == $doctor->id ? 'selected' : '' }}>
@@ -70,15 +76,25 @@
                                 </div>
                             </div>
 
+                            <div class="row form-group">
+                                <div class="col-md-6">
+                                    <label class="col-form-label">Este rezervat:</label>
+                                    <select class="form-control" name="is_booked">
+                                        <option value="0" {{ !$reservationSlot->is_booked ? 'selected' : '' }}>Nu
+                                        </option>
+                                        <option value="1" {{ $reservationSlot->is_booked ? 'selected' : '' }}>Da
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class='row'>
                                 <div class='col-md-12'>
-                                    <a class='btn btn-warning pull-left'
-                                        href='{{ route('core_reservation_slots.index') }}'>
-                                        <i class='fas fa-times'></i> Annulla
+                                    <a class='btn btn-warning pull-left' href='{{ route('core_reservation_slots.index') }}'>
+                                        <i class='fas fa-times'></i> Anulează
                                     </a>
                                     <button type='submit' class='btn btn-primary pull-right'>
-                                        <i class='fas fa-save'></i> Salva
+                                        <i class='fas fa-save'></i> Salvează
                                     </button>
                                 </div>
                             </div>

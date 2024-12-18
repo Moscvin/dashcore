@@ -22,8 +22,8 @@ class CoreSlotRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'time' => ['required', 'date_format:Y-m-d H:i'],
-            'doctor_id' => ['required', 'exists:doctors,id'],
+            'time' => 'required|date_format:d-m-Y H:i|after:now',
+            'doctor_id' => ['nullable', 'exists:doctors,id'],
             'is_booked' => ['nullable', 'boolean'],
         ];
     }

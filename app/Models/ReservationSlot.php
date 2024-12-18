@@ -10,12 +10,13 @@ class ReservationSlot extends Model
     use HasFactory;
 
     protected $table = 'reservation_slots';
-    protected $fillable = ['time', 'doctor_id', 'is_booked'];
+    protected $fillable = ['time', 'doctor_id', 'is_booked','reservation_id'];
 
-    public function reservations()
+    public function reservation()
     {
-        return $this->hasMany(Reservation::class);
+        return $this->belongsTo(Reservation::class, 'reservation_id', 'id');
     }
+
     public function doctor()
     {
         return $this->belongsTo(Doctor::class, 'doctor_id');

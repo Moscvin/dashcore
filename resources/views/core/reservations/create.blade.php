@@ -49,24 +49,18 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="required">Doctor</label>
-                                            <select id="doctor" name="doctor_id" class="form-control select2" required>
-                                                <option value="">Selectați un doctor</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
-                                            <label class="required">Timpul Rezervării</label>
-                                            <select id="reservation_slot" name="reservation_slot_id"
-                                                class="form-control select2" required>
-                                                <option value="">Selectați un timp</option>
-                                            </select>
+                                            <label class="required">Intervale de timp</label>
+                                            <div id="slot-times-container">
+                                                <div class="input-group mb-2">
+                                                    <input type="datetime-local" name="slot_times[]" class="form-control" required>
+                                                    <button type="button" class="btn btn-success add-slot-btn">+</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -96,59 +90,19 @@
                 theme: 'dashcore',
                 width: '100%'
             });
-            $('#specialization').on('change', function() {
-                const specializationId = $(this).val();
-                const doctorSelect = $('#doctor');
-                const slotSelect = $('#reservation_slot');
 
-                doctorSelect.html('<option value="">Select a doctor</option>');
-                slotSelect.html('<option value="">Select a time</option>');
-
-                if (specializationId) {
-                    $.ajax({
-                        url: "{{ route('core_reservations.doctors') }}",
-                        type: 'GET',
-                        data: {
-                            specialization_id: specializationId
-                        },
-                        success: function(doctors) {
-                            doctors.forEach(function(doctor) {
-                                doctorSelect.append(
-                                    `<option value="${doctor.id}">${doctor.name}</option>`
-                                );
-                            });
-                        },
-                        error: function() {
-                            alert('Eroare la încărcarea doctorilor. Încercați din nou.');
-                        }
-                    });
-                }
+        
+            $(document).on('click', '.add-slot-btn', function() {
+                $('#slot-times-container').append(`
+                    <div class="input-group mb-2">
+                        <input type="datetime-local" name="slot_times[]" class="form-control" required>
+                        <button type="button" class="btn btn-danger remove-slot-btn">-</button>
+                    </div>
+                `);
             });
-            $('#doctor').on('change', function() {
-                const doctorId = $(this).val();
-                const slotSelect = $('#reservation_slot');
 
-                slotSelect.html('<option value="">Selectați un timp</option>');
-
-                if (doctorId) {
-                    $.ajax({
-                        url: "{{ route('core_reservations.slots') }}",
-                        type: 'GET',
-                        data: {
-                            doctor_id: doctorId
-                        },
-                        success: function(slots) {
-                            slots.forEach(function(slot) {
-                                slotSelect.append(
-                                    `<option value="${slot.id}">${slot.time}</option>`
-                                );
-                            });
-                        },
-                        error: function() {
-                            alert('Eroare la încărcarea sloturilor. Încercați din nou.');
-                        }
-                    });
-                }
+            $(document).on('click', '.remove-slot-btn', function() {
+                $(this).closest('.input-group').remove();
             });
         });
     </script>

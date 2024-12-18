@@ -9,8 +9,12 @@
 @section('css')
     <style>
         .locked {
-            background-color: #222d321c !important;
+            background-color: #f5f5f5 !important;
             color: #a7a7a7 !important;
+        }
+
+        .btn-action {
+            margin-right: 5px;
         }
     </style>
 @stop
@@ -39,8 +43,7 @@
                                         <th>Client</th>
                                         <th>Doctor</th>
                                         <th>Specialization</th>
-                                        <th>Time </th>
-                                        {{-- <th>Status</th> --}}
+                                        <th>Time</th>
                                         @if (in_array('V', $chars))
                                             <th class="action_btn nosorting"></th>
                                         @endif
@@ -73,52 +76,15 @@
         <x-core.modals.modal-delete-item prefix='reservation' action='eliminare rezervare' url='core_reservations'
             :tableId="'table'" />
     @endif
-
-
 @endsection
 
 @section('js')
     <script>
-        const filterTable = () => {
-            const table = $('#table').DataTable();
-            table.draw();
-        }
-
-        $(`[name=valueFilter]`).select2({
-            theme: "dashcore",
-            minimumInputLength: 1,
-            language: "it",
-            allowClear: true,
-            ajax: {
-                url: "/filters/reservations/fields",
-                dataType: "json",
-                data: (params) => {
-                    const query = {
-                        value: params.term,
-                        field: document.querySelector('[name=fieldFilter]').value,
-                    };
-                    return query;
-                },
-            },
-            placeholder: "Comune",
-        });
-
         $(document).ready(function() {
             $('#table').DataTable({
                 dom: "lBrtip",
                 ajax: {
                     url: '/core_reservations/ajax',
-                    data: query => {
-                        
-                        const fieldFilterElement = document.querySelector('[name=fieldFilter]');
-                        if (fieldFilterElement) {
-                            query.fieldFilter = fieldFilterElement.value; 
-                        } else {
-                            // console.error('Elementul [name=fieldFilter] nu a fost găsit în DOM.');
-                            query.fieldFilter = ''; 
-                        }
-                        return query;
-                    }
                 },
                 paging: true,
                 serverSide: true,
@@ -150,7 +116,7 @@
                 ],
                 lengthMenu: [
                     [10, 25, 50, 100, 250, 500, 1000, -1],
-                    [10, 25, 50, 100, 250, 500, 1000, "tutti"]
+                    [10, 25, 50, 100, 250, 500, 1000, "Tutti"]
                 ],
                 columnDefs: [{
                         targets: 'action_btn',
@@ -168,9 +134,8 @@
                     infoEmpty: 'Nessun record',
                     infoFiltered: '(su _MAX_ righe complessive)',
                     lengthMenu: 'Mostra _MENU_ righe',
-                    loadingRecords: '...',
-                    processing: '...',
-                    search: '',
+                    loadingRecords: 'Caricamento...',
+                    processing: 'Elaborazione...',
                     zeroRecords: 'Nessun dato corrisponde ai criteri impostati',
                     paginate: {
                         first: 'Primo',
@@ -180,30 +145,6 @@
                     }
                 }
             });
-
-            $(`[name=valueFilter]`).select2({
-                theme: "dashcore",
-                minimumInputLength: 1,
-                language: "it",
-                allowClear: true,
-                ajax: {
-                    url: "/filters/reservations/fields",
-                    dataType: "json",
-                    data: (params) => {
-                        const query = {
-                            value: params.term,
-                            field: document.querySelector('[name=fieldFilter]')?.value || '',
-                        };
-                        return query;
-                    }
-                },
-                placeholder: "Comune",
-            });
-        });
-
-
-        $(document).on('select2:open', () => {
-            document.querySelector('.select2-search__field').focus();
         });
     </script>
 @endsection

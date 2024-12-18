@@ -13,10 +13,17 @@ return new class extends Migration
     {
         Schema::create('reservation_slots', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('doctor_id')->nullable();
+            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
+
+            $table->unsignedBigInteger('reservation_id')->nullable();
+            $table->foreign('reservation_id')->references('id')->on('reservations')->onDelete('cascade');
+
             $table->dateTime('time');
             $table->boolean('is_booked')->default(false);
+
             $table->unique(['doctor_id', 'time']);
+
             $table->timestamps();
         });
     }

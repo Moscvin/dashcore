@@ -31,44 +31,41 @@ class ReservationController extends BaseController
         $dataTable = (new CoreReservationRepository(new Reservation()))->getDataTablesFiltered($request);
         $index = 0;
         $items = [];
-
         foreach ($dataTable->items as $item) {
+            $slotTimes = $item->reservationSlots->pluck('time')->toArray();
             $items[$index] = [
                 $item->coreUser->username ?? '',
                 $item->doctor->name ?? '',
                 $item->specialization->specialization_name ?? '',
-                $item->reservationSlot->time ?? '',
-                // $item->status ?? '',
+                implode(', ', $slotTimes),
             ];
-
-
 
             if (in_array("V", $this->chars)) {
                 array_push(
                     $items[$index],
-                    "<a href=\"/core_reservations/$item->id\" class=\"btn btn-xs btn-primary\" title=\"Visualizza\">
-                        <i class=\"fa fa-eye\"></i>
-                    </a>"
+                    "<a href=\"/core_reservations/$item->id\" class=\"btn btn-xs btn-primary\" title=\"Vizualizează\">
+                    <i class=\"fa fa-eye\"></i>
+                </a>"
                 );
             }
             if (in_array("E", $this->chars)) {
                 array_push(
                     $items[$index],
-                    "<a href=\"/core_reservations/$item->id/edit\" class=\"btn btn-xs btn-info\" title=\"Modifica\">
-                        <i class=\"fa fa-edit\"></i>
-                    </a>"
+                    "<a href=\"/core_reservations/$item->id/edit\" class=\"btn btn-xs btn-info\" title=\"Editează\">
+                    <i class=\"fa fa-edit\"></i>
+                </a>"
                 );
             }
             if (in_array("L", $this->chars)) {
                 $btnClass = $item->status == 1 ? 'warning' : 'primary';
                 $icon = $item->status == 1 ? 'lock' : 'unlock';
-                $title = $item->status == 1 ? 'Nascondi' : 'Mostra';
+                $title = $item->status == 1 ? 'Ascunde' : 'Afișează';
                 array_push(
                     $items[$index],
                     "<button onclick='reservationLockItem(this)' title=\"$title\"  data-id=\"$item->id\" data-current=\"$item->status\"
-                            type=\"button\" class=\"action_block btn btn-xs btn-$btnClass\">
-                        <i class=\"fa fa-$icon\"></i>
-                    </button>"
+                        type=\"button\" class=\"action_block btn btn-xs btn-$btnClass\">
+                    <i class=\"fa fa-$icon\"></i>
+                </button>"
                 );
             }
 
@@ -76,15 +73,14 @@ class ReservationController extends BaseController
                 array_push(
                     $items[$index],
                     "<button onclick='reservationDeleteItem(this)' data-id=\"$item->id\" type=\"button\"
-                            class=\"action_del btn btn-xs btn-danger\" title=\"Elimina\">
-                        <i class=\"fa fa-trash\"></i>
-                    </button>"
+                        class=\"action_del btn btn-xs btn-danger\" title=\"Șterge\">
+                    <i class=\"fa fa-trash\"></i>
+                </button>"
                 );
             }
 
             $index++;
         }
-
 
         return response()->json([
             'start' => $request->start,
@@ -95,6 +91,8 @@ class ReservationController extends BaseController
             "data" => $items,
         ]);
     }
+
+
 
     public function create()
     {
@@ -109,18 +107,29 @@ class ReservationController extends BaseController
     {
         if (!in_array('A', $this->chars)) return redirect('/no_permission');
 
-        $reservationData = $this->fillCoreReservation($request);
-        $reservationData['core_user_id'] = Auth::id();
 
-        $reservation = Reservation::create($reservationData);
+        $reservation = Reservation::create([
+            'core_user_id' => Auth::id(),
+            'specialization_id' => $request->specialization_id,
+            'doctor_id' => null,
+            'reservation_slot_id' => null,
+            'status' => '0',
+        ]);
 
-        $reservation->load(['coreUser', 'doctor', 'specialization', 'reservationSlot']);
+        foreach ($request->slot_times as $slotTime) {
+            ReservationSlot::create([
+                'time' => $slotTime,
+                'doctor_id' => null,
+                'reservation_id' => $reservation->id,
+                'is_booked' => false,
+            ]);
+        }
+        // dd($request->all());
 
-        // Mail::to($reservation->coreUser->email)->send(new ReservationMail($reservation));
-
-        Session::flash('success', 'Reservation is adding!');
+        Session::flash('success', 'Rezervarea și sloturile au fost adăugate!');
         return redirect('/core_reservations');
     }
+
 
     public function show(Reservation $coreReservation)
     {

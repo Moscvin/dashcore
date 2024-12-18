@@ -19,7 +19,7 @@ class Reservation extends Model
         'status',
     ];
 
-    protected $with = ['doctor', 'specialization', 'reservationSlot'];
+    protected $with = ['doctor', 'specialization', 'reservationSlots'];
 
     protected $table = 'reservations';
 
@@ -31,10 +31,11 @@ class Reservation extends Model
     {
         return $this->belongsTo(Specialization::class, 'specialization_id', 'id');
     }
-    public function reservationSlot()
+    public function reservationSlots()
     {
-        return $this->belongsTo(ReservationSlot::class, 'reservation_slot_id', 'id');
+        return $this->hasMany(ReservationSlot::class, 'reservation_id', 'id');
     }
+
     public function coreUser()
     {
         return $this->belongsTo(\App\Models\Core\CoreUser::class, 'core_user_id', 'id');
