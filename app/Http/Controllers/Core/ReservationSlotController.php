@@ -28,7 +28,7 @@ class ReservationSlotController extends BaseController
         if (!in_array('A', $this->chars)) return redirect('/no_permission');
 
         ReservationSlot::create([
-            'time' => $request->time,
+            'time' => \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $request->time)->toDateTimeString(),
             'doctor_id' => $request->doctor_id,
             'is_booked' => $request->is_booked ?? false,
         ]);
@@ -50,7 +50,7 @@ class ReservationSlotController extends BaseController
     {
         if (!in_array('E', $this->chars)) return redirect('/no_permission');
         $reservationSlot->update([
-            'time' => $request->time,
+            'time' => \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $request->time)->toDateTimeString(),
             'doctor_id' => $request->doctor_id,
             'is_booked' => $request->is_booked ?? false,
         ]);

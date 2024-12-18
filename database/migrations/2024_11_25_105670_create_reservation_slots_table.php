@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
             $table->dateTime('time');
             $table->boolean('is_booked')->default(false);
+            $table->unique(['doctor_id', 'time']);
             $table->timestamps();
         });
     }

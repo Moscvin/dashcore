@@ -28,6 +28,7 @@ class CoreDoctorController extends BaseController
 
         Doctor::create([
             'name' => $request->name,
+            'specialization_id' => $request->specialization_id,
         ]);
 
 
@@ -39,15 +40,18 @@ class CoreDoctorController extends BaseController
     {
         if (!in_array('E', $this->chars)) return redirect('/no_permission');
 
-        return view('core.doctors.edit', compact('coreDoctor'));
+        $specializations = Specialization::get();
+
+        return view('core.doctors.edit', compact('coreDoctor', 'specializations'));
     }
 
     public function create()
     {
 
         if (!in_array('A', $this->chars)) return redirect('/no_permission');
+        $specializations = Specialization::get();
 
-        return view('core.doctors.create');
+        return view('core.doctors.create', compact('specializations'));
     }
 
     public function update(CoreDoctorRequest $request, Doctor $coreDoctor)

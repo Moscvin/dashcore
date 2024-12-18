@@ -2,8 +2,10 @@
 
 namespace App\Models\Core;
 
+use App\Models\Reservation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
 
 class CoreUser extends Authenticatable
 {
@@ -41,7 +43,13 @@ class CoreUser extends Authenticatable
         return $this->active ? 'Si' : 'No';
     }
 
-    public function permissionExceptions() {
-        return $this->hasMany(CorePermissionException::class, 'core_user_id')->whereNotNull('permission')->where('permission','!=','');        
+    public function permissionExceptions()
+    {
+        return $this->hasMany(CorePermissionException::class, 'core_user_id')->whereNotNull('permission')->where('permission', '!=', '');
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class, 'core_user_id', 'id');
     }
 }

@@ -30,6 +30,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Specialization</th>
                                     @if (in_array('E', $chars))
                                     <th class='action_btn'></th>
                                     @endif
@@ -42,6 +43,7 @@
                                 @foreach($coreDoctors as $coreDoctor)
                                 <tr>
                                     <td>{{ $coreDoctor->name }}</td>
+                                    <td>{{ $coreDoctor->specialization->specialization_name }}</td>
                                     @if (in_array('E', $chars))
                                     <td>
                                         <a href='{{ route('core_doctors.edit', $coreDoctor->id) }}'

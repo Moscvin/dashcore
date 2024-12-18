@@ -29,8 +29,9 @@
                             <table class='table table-responsive table-bordered' id='table'>
                                 <thead>
                                     <tr>
-                                        <th>Time</th>
                                         <th>Doctor</th>
+                                        <th>Time</th>
+                                        <th>Is Booked</th>
                                         @if (in_array('E', $chars))
                                             <th class='action_btn'>Edit</th>
                                         @endif
@@ -42,8 +43,10 @@
                                 <tbody>
                                     @foreach ($reservationSlots as $reservationSlot)
                                         <tr>
-                                            <td>{{ $reservationSlot->time }}</td> 
-                                            <td>{{ $reservationSlot->doctor->name ?? 'N/A' }}</td>
+                                            <td>{{ $reservationSlot->doctor->name }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($reservationSlot->time)->format('d-m-Y H:i:s') }}
+                                            </td>
+                                            <td>{{ $reservationSlot->is_booked }}</td>
                                             @if (in_array('E', $chars))
                                                 <td>
                                                     <a href='{{ route('core_reservation_slots.edit', $reservationSlot->id) }}'

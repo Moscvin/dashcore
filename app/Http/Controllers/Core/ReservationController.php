@@ -157,10 +157,7 @@ class ReservationController extends BaseController
     {
         if (!in_array('L', $this->chars)) return redirect('/no_permission');
 
-        $coreReservation->update([
-            'status' => $request->lock ? '0' : '1',
-
-        ]);
+        $coreReservation->update(['status' => $request->lock ? Reservation::STATUS_UNLOCKED : Reservation::STATUS_LOCKED]);
 
         return response()->json(['status' => 'Success'], 200);
     }
@@ -190,26 +187,11 @@ class ReservationController extends BaseController
             return response()->json(['error' => 'Specialization ID is required'], 400);
         }
 
-        $doctors = Doctor::whereHas('specializations', function ($query) use ($specializationId) {
-            $query->where('specialization_id', $specializationId);
-        })->get();
+        $doctors = Doctor::where('specialization_id', $specializationId)->get();
+
 
         return response()->json($doctors);
     }
-    // public function getDoctorByReservationSlot(Request $request)
-    // {
-    //     $reservationSlotId = $request->input('reservation_slot_id');
-
-    //     if (!$reservationSlotId) {
-    //         return response()->json(['error' => 'Reservation Slot ID is required'], 400);
-    //     }
-
-    //     $doctor = Doctor::whereHas('reservationSlots', function ($query) use ($reservationSlotId) {
-    //         $query->where('id', $reservationSlotId);
-    //     })->get();
-
-    //     return response()->json($doctor);
-    // }
     public function getAvailableSlots(Request $request)
     {
         $doctorId = $request->input('doctor_id');
@@ -223,5 +205,10 @@ class ReservationController extends BaseController
             ->get();
 
         return response()->json($slots);
+    }
+    public function availableSlots($doctorId)
+    {
+        $slots = ReservationSlot::availableForDoctor($doctorId)->get();
+        return view('core.reservation_slots.available', compact('slots'));
     }
 }

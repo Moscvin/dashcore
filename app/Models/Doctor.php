@@ -11,6 +11,7 @@ class Doctor extends Model
 
     protected $fillable = [
         'name',
+        'specialization_id',
     ];
     protected $table = 'doctors';
 
@@ -19,12 +20,17 @@ class Doctor extends Model
         return $this->hasMany(Reservation::class);
     }
 
-    public function specializations()
+    public function specialization()
     {
-        return $this->belongsToMany(Specialization::class, 'doctor_specialization', 'doctor_id', 'specialization_id');
+        return $this->belongsTo(Specialization::class, 'specialization_id', 'id');
     }
+
     public function reservationSlots()
     {
         return $this->hasMany(ReservationSlot::class, 'doctor_id');
+    }
+    public function hasSpecialization($specializationId)
+    {
+        return $this->specializations()->where('id', $specializationId)->exists();
     }
 }

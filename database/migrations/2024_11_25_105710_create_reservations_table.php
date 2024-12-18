@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('core_user_id')->constrained()->onDelete('cascade');
             $table->foreignId('doctor_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('specialization_id')->constrained()->onDelete('cascade');
-            $table->foreignId('reservation_slot_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['0', '1',])->default('0');
+            $table->foreignId('reservation_slot_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('status', 1)->default('0');
             $table->timestamps();
         });
     }

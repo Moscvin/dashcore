@@ -20,4 +20,12 @@ class ReservationSlot extends Model
     {
         return $this->belongsTo(Doctor::class, 'doctor_id');
     }
+    public function isBooked()
+    {
+        return $this->is_booked;
+    }
+    public static function availableSlotsForDoctor($doctorId)
+    {
+        return self::where('doctor_id', $doctorId)->where('is_booked', false)->get();
+    }
 }
