@@ -99,13 +99,17 @@
                                                             class="form-control"
                                                             value="{{ \Carbon\Carbon::parse($slot->time)->format('Y-m-d\TH:i') }}"
                                                             required>
-                                                        <button type="button"
-                                                            class="btn btn-danger remove-slot-btn">-</button>
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-danger remove-slot-btn">
+                                                                <i class="fas fa-minus"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-success add-slot-btn">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 @endforeach
-                                                <div class="input-group mb-2">
-                                                    <input type="datetime-local" name="slot_times[]" class="form-control">
-                                                    <button type="button" class="btn btn-success add-slot-btn">+</button>
+                                            </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -138,41 +142,37 @@
                 width: '100%'
             });
 
-            // $(document).on('change', '#specialization', function() {
-            //     let specializationId = $(this).val();
-            //     if (specializationId) {
-            //         $.ajax({
-            //             url: '/api/doctors-by-specialization/' + specializationId,
-            //             method: 'GET',
-            //             success: function(response) {
-            //                 let options = '<option value="">Selectați un doctor</option>';
-            //                 response.forEach(function(doctor) {
-            //                     options +=
-            //                         `<option value="${doctor.id}">${doctor.name}</option>`;
-            //                 });
-            //                 $('#doctors').html(options);
-            //             },
-            //             error: function() {
-            //                 alert('Eroare la încărcarea doctorilor.');
-            //             }
-            //         });
-            //     } else {
-            //         $('#doctors').html('<option value="">Selectați un doctor</option>');
-            //     }
-            // });
-
             $(document).on('click', '.add-slot-btn', function() {
-                $('#slot-times-container').append(`
+                $(this).closest('.input-group').after(`
                     <div class="input-group mb-2">
                         <input type="datetime-local" name="slot_times[]" class="form-control" required>
-                        <button type="button" class="btn btn-danger remove-slot-btn">-</button>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-danger remove-slot-btn">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-success add-slot-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
                 `);
+                updateRemoveButtons();
             });
 
             $(document).on('click', '.remove-slot-btn', function() {
                 $(this).closest('.input-group').remove();
+                updateRemoveButtons();
             });
+
+            function updateRemoveButtons() {
+                if ($('#slot-times-container .input-group').length === 1) {
+                    $('#slot-times-container .remove-slot-btn').attr('disabled', true);
+                } else {
+                    $('#slot-times-container .remove-slot-btn').attr('disabled', false);
+                }
+            }
+
+            updateRemoveButtons();
         });
     </script>
 @stop

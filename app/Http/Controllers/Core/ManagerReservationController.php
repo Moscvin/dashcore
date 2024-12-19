@@ -147,6 +147,7 @@ class ManagerReservationController extends BaseController
     public function update(CoreReservationRequest $request, Reservation $coreReservation)
     {
 
+        // dd($request->all());
         if ($coreReservation->status != 0) {
             return redirect()->route('manager_reservation.index')->with('error', 'Reservation its block and dont change');
         }
@@ -163,6 +164,8 @@ class ManagerReservationController extends BaseController
 
             $coreReservation->update([
                 'specialization_id' => $request->specialization_id,
+                'doctor_id' => $request->doctor_id,
+                'status' => $request->status,
             ]);
             $coreReservation->reservationSlots()->delete();
 

@@ -45,7 +45,7 @@
                             </div>
                             <div class="box-body">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="required">Specializare</label>
                                             <select id="specialization" name="specialization_id"
@@ -73,33 +73,37 @@
                                                             class="form-control"
                                                             value="{{ \Carbon\Carbon::parse($slot->time)->format('Y-m-d\TH:i') }}"
                                                             required>
-                                                        <button type="button"
-                                                            class="btn btn-danger remove-slot-btn">-</button>
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-danger remove-slot-btn">
+                                                                <i class="fas fa-minus"></i>
+                                                            </button>
+                                                            <button type="button" class="btn btn-success add-slot-btn">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 @endforeach
-                                                <div class="input-group mb-2">
-                                                    <input type="datetime-local" name="slot_times[]" class="form-control">
-                                                    <button type="button" class="btn btn-success add-slot-btn">+</button>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-md-12">
-                            <a class="btn btn-warning pull-left" href="{{ route('core_reservations.index') }}">
-                                <i class="fas fa-times"></i> Anulare
-                            </a>
-                            <button class="btn btn-primary pull-right save_btn">
-                                <i class="fas fa-save"></i> Salvare
-                            </button>
-                        </div>
                     </div>
-                </form>
+            </div>
+
+            <div class="col-md-12">
+                <a class="btn btn-warning pull-left" href="{{ route('core_reservations.index') }}">
+                    <i class="fas fa-times"></i> Anulare
+                </a>
+                <button class="btn btn-primary pull-right save_btn">
+                    <i class="fas fa-save"></i> Salvare
+                </button>
             </div>
         </div>
+        </form>
+    </div>
+    </div>
     </div>
 @endsection
 
@@ -112,19 +116,37 @@
                 width: '100%'
             });
 
-
             $(document).on('click', '.add-slot-btn', function() {
-                $('#slot-times-container').append(`
+                $(this).closest('.input-group').after(`
                     <div class="input-group mb-2">
                         <input type="datetime-local" name="slot_times[]" class="form-control" required>
-                        <button type="button" class="btn btn-danger remove-slot-btn">-</button>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-danger remove-slot-btn">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-success add-slot-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
                 `);
+                updateRemoveButtons();
             });
 
             $(document).on('click', '.remove-slot-btn', function() {
                 $(this).closest('.input-group').remove();
+                updateRemoveButtons();
             });
+
+            function updateRemoveButtons() {
+                if ($('#slot-times-container .input-group').length === 1) {
+                    $('#slot-times-container .remove-slot-btn').attr('disabled', true);
+                } else {
+                    $('#slot-times-container .remove-slot-btn').attr('disabled', false);
+                }
+            }
+
+            updateRemoveButtons();
         });
     </script>
 @stop
