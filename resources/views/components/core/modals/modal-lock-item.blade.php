@@ -40,8 +40,6 @@
             window[`${prefix}LockModal`] = new bootstrap.Modal(document.getElementById(modalId), {});
 
             window[`${prefix}LockItem`] = function(context) {
-                // const modalElement = document.getElementById(modalId);
-                // modalElement.removeAttribute('aria-hidden');
                 const oldContext = document.getElementById(`${modalId}Context`);
                 if (oldContext) {
                     oldContext.removeAttribute('id');

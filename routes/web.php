@@ -187,6 +187,18 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                     });
                 });
             });
+            Route::group(['as' => 'manager_reservation.', 'prefix' => 'manager_reservation', 'controller' => ManagerReservationController::class], function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/ajax', 'ajax')->name('ajax');
+                Route::get('/create', 'create')->name('create');
+                Route::post('/', 'store')->name('store');
+                Route::get('/{coreReservation}', 'show')->name('show');
+                Route::get('/{coreReservation}/edit', 'edit')->name('edit');
+                Route::patch('/{coreReservation}', 'update')->name('update');
+                Route::patch('/{coreReservation}/lock', 'lock')->name('lock');
+                Route::delete('/{coreReservation}', 'destroy')->name('destroy');
+                Route::get('/doctors', 'getDoctorsBySpecialization')->name('doctors');
+            });
         });
 
         Route::group(['as' => 'filters.', 'prefix' => 'filters', 'namespace' => 'Filters'], function () {
