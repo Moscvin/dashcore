@@ -31,7 +31,6 @@ class ReservationSlotController extends BaseController
         ReservationSlot::create([
             'time' => \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $request->time)->toDateTimeString(),
             'doctor_id' => $request->doctor_id,
-            'is_booked' => $request->is_booked ?? false,
         ]);
 
         Session::flash('success', 'Il specialization_name è stato aggiunto!');
@@ -54,7 +53,6 @@ class ReservationSlotController extends BaseController
         $reservationSlot->update([
             'time' => \Carbon\Carbon::createFromFormat('d-m-Y H:i', $request->time)->toDateTimeString(),
             'doctor_id' => $request->doctor_id,
-            'is_booked' => $request->is_booked ?? false,
         ]);
 
         Session::flash('success', 'Le modifiche sono state correttamente salvate!');

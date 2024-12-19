@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Reservation;
 
 class CoreReservationRequest extends FormRequest
 {
@@ -21,24 +22,51 @@ class CoreReservationRequest extends FormRequest
      */
     public function rules(): array
     {
-        // dd($this);
         return [
-            'specialization_id' => 'required|exists:specializations,id',
-            'slot_times' => 'required|array|min:1', 
-            'slot_times.*' => 'required|date|after:now',
+            'specialization_id' => [
+                'required',
+                'exists:specializations,id'
+            ],
+            'slot_times' => 'required|array|min:1',
+            'slot_times.*' => [
+                'required',
+                'date',
+                'after:now',
+                function ($attribute, $value, $fail) {
+                    $exists = Reservation::where('specialization_id', $this->input('specialization_id'))
+                        ->where('core_user_id', $this->user()->id)
+                        ->whereHas('reservationSlots', function ($query) use ($value) {
+                            $query->where('time', $value);
+                        })
+                        ->when($this->route('coreReservation'), function ($query) {
+                            $query->where('id', '!=', $this->route('coreReservation')->id);
+                        })
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('This slot time is occupied.');
+                    }
+                }
+            ],
         ];
     }
-    public function messages()
+
+    /**
+     * Get custom error messages for validation.
+     *
+     * @return array
+     */
+    public function messages(): array
     {
-        return[
-            'specialization_id.required' => 'Il campo specialization_id è obbligatorio',
-            'specialization_id.exists' => 'Il campo specialization_id deve esistere nella tabella specializations',
-            'slot_times.required' => 'Il campo slot_times è obbligatorio',
-            'slot_times.array' => 'Il campo slot_times deve essere un array',
-            'slot_times.min' => 'Il campo slot_times deve avere almeno un elemento',
-            'slot_times.*.required' => 'Il campo slot_times deve avere almeno un elemento',
-            'slot_times.*.date' => 'Il campo slot_times deve essere una data valida',
-            'slot_times.*.after' => 'Il campo slot_times deve essere una data futura',
+        return [
+            'specialization_id.required' => 'Câmpul specializare este obligatoriu.',
+            'specialization_id.exists' => 'Specializarea selectată nu există.',
+            'slot_times.required' => 'Trebuie să adăugați cel puțin un interval de timp.',
+            'slot_times.array' => 'Intervalele de timp trebuie să fie un array.',
+            'slot_times.min' => 'Trebuie să adăugați cel puțin un interval de timp.',
+            'slot_times.*.required' => 'Fiecare interval de timp este obligatoriu.',
+            'slot_times.*.date' => 'Fiecare interval de timp trebuie să fie o dată validă.',
+            'slot_times.*.after' => 'Fiecare interval de timp trebuie să fie în viitor.',
         ];
     }
 }

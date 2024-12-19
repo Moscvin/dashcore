@@ -69,5 +69,7 @@ class Kernel extends HttpKernel
         'api.appToken' => \App\Http\Middleware\Api\CheckAppToken::class,
         'api.userToken' => \App\Http\Middleware\Api\CheckUserToken::class,
         'gitlabWebhooksToken' => \App\Http\Middleware\Api\Webhooks\GitlabWebhooksToken::class,
+        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+        'checkReservationOwnership' => \App\Http\Middleware\CheckReservationOwnership::class,
     ];
 }

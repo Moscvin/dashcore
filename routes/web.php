@@ -172,17 +172,19 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             Route::group(['middleware' => 'auth'], function () {
                 Route::group(['as' => 'core_reservations.', 'prefix' => 'core_reservations', 'controller' => ReservationController::class], function () {
                     Route::get('/doctors', 'getDoctorsBySpecialization')->name('doctors');
-                    // Route::get('/doctors-by-slot', 'getDoctorByReservationSlot')->name('doctors_by_slot');
                     Route::get('/core_reservations/slots', 'getAvailableSlots')->name('slots');
                     Route::get('/', 'index')->name('index');
                     Route::get('/ajax', 'ajax')->name('ajax');
                     Route::get('/create', 'create')->name('create');
                     Route::post('/', 'store')->name('store');
                     Route::get('/{coreReservation}', 'show')->name('show');
-                    Route::get('/{coreReservation}/edit', 'edit')->name('edit');
-                    Route::patch('/{coreReservation}', 'update')->name('update');
-                    Route::patch('/{coreReservation}/lock', 'lock')->name('lock');
-                    Route::delete('/{coreReservation}', 'destroy')->name('destroy');
+                    // Middleware pentru verificarea dreptului de proprietate
+                    Route::group(['middleware' => 'checkReservationOwnership'], function () {
+                        Route::get('/{coreReservation}/edit', 'edit')->name('edit');
+                        Route::patch('/{coreReservation}', 'update')->name('update');
+                        Route::patch('/{coreReservation}/lock', 'lock')->name('lock');
+                        Route::delete('/{coreReservation}', 'destroy')->name('destroy');
+                    });
                 });
             });
         });

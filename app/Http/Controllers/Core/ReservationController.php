@@ -13,7 +13,7 @@ use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
 
 class ReservationController extends BaseController
 {
@@ -104,40 +104,45 @@ class ReservationController extends BaseController
         if (!in_array('A', $this->chars)) {
             return redirect('/no_permission');
         }
-        $existingReservation = Reservation::where('core_user_id', Auth::id())
-            ->where('specialization_id', $request->specialization_id)
-            ->first();
-        if ($existingReservation) {
-            Session::flash('error', 'You already have a reservation with this specialization.');
-            return redirect()->route('core_reservations.index');
-        }
 
-        $reservation = Reservation::create([
-            'core_user_id' => Auth::id(),
-            'specialization_id' => $request->specialization_id,
-            'doctor_id' => null,
-            'reservation_slot_id' => null,
-            'status' => '0',
-        ]);
+        try {
+            // $validated = $request->validated();
+            // dd($validated);
+            $existingReservation = Reservation::where('core_user_id', Auth::id())
+                ->where('specialization_id', $request->specialization_id)
+                ->first();
 
+            if ($existingReservation) {
+                return back()->withErrors(['error' => 'Existing this reservation'])->withInput();
+            }
 
-        foreach ($request->slot_times as $slotTime) {
-            ReservationSlot::create([
-                'time' => $slotTime,
+            $reservation = Reservation::create([
+                'core_user_id' => Auth::id(),
+                'specialization_id' => $request->specialization_id,
                 'doctor_id' => null,
-                'reservation_id' => $reservation->id,
-                'is_booked' => false,
+                'status' => '0',
             ]);
-        }
 
-        Session::flash('success', 'Reservation is created successfully!');
-        return redirect('/core_reservations');
+            foreach ($request->slot_times as $slotTime) {
+                ReservationSlot::create([
+                    'time' => $slotTime,
+                    'reservation_id' => $reservation->id,
+                ]);
+            }
+
+            return redirect()->route('core_reservations.index')->with('success', 'Reservation created successfully!');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Error to create'])->withInput();
+        }
     }
 
     public function show(Reservation $coreReservation)
     {
         if (!in_array('V', $this->chars)) return redirect('/no_permission');
 
+        if ($coreReservation->core_user_id != Auth::id()) {
+            return redirect()->route('core_reservations.index')->with('error', 'You dont have permission to show this reservation');
+        }
         return view('core.reservations.show', compact('coreReservation'));
     }
 
@@ -145,6 +150,9 @@ class ReservationController extends BaseController
     {
         if (!in_array('E', $this->chars)) return redirect('/no_permission');
 
+        if ($coreReservation->core_user_id != Auth::id()) {
+            return redirect()->route('core_reservations.index')->with('error', 'You dont have permission to edit this reservation');
+        }
         if ($coreReservation->status == 1) {
             Session::flash('error', 'Reservation is blocked!');
             return redirect()->route('core_reservations.index');
@@ -159,29 +167,40 @@ class ReservationController extends BaseController
     }
     public function update(CoreReservationRequest $request, Reservation $coreReservation)
     {
+        if ($coreReservation->core_user_id != Auth::id()) {
+            return redirect()->route('core_reservations.index')->with('error', 'You dont have permission to edit this reservation');
+        }
         if ($coreReservation->status != 0) {
-            return redirect()->route('core_reservations.index')->with('error', 'Reservation is locked and cannot be modified.');
+            return redirect()->route('core_reservations.index')->with('error', 'Reservation its block and dont change');
         }
 
+        try {
+            $existingReservation = Reservation::where('core_user_id', Auth::id())
+                ->where('specialization_id', $request->specialization_id)
+                ->where('id', '!=', $coreReservation->id)
+                ->first();
 
-        $coreReservation->update([
-            'specialization_id' => $request->specialization_id,
-            'doctor_id' => $request->doctor_id,
-        ]);
+            if ($existingReservation) {
+                return back()->withErrors(['error' => 'You have this reservation'])->withInput();
+            }
 
-
-        $coreReservation->reservationSlots()->delete();
-
-        foreach ($request->slot_times as $slotTime) {
-            $coreReservation->reservationSlots()->create([
-                'time' => $slotTime,
-                'doctor_id' => $request->doctor_id,
-                'is_booked' => false,
+            $coreReservation->update([
+                'specialization_id' => $request->specialization_id,
             ]);
-        }
 
-        Session::flash('success', 'Reservation is updated successfully!');
-        return redirect()->route('core_reservations.index');
+
+            $coreReservation->reservationSlots()->delete();
+
+            foreach ($request->slot_times as $slotTime) {
+                $coreReservation->reservationSlots()->create([
+                    'time' => $slotTime,
+                ]);
+            }
+
+            return redirect()->route('core_reservations.index')->with('success', 'Reservation updated successfully!');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Error'])->withInput();
+        }
     }
 
     public function lock(Request $request, Reservation $coreReservation)
@@ -192,7 +211,6 @@ class ReservationController extends BaseController
 
         return response()->json(['status' => 'Success'], 200);
     }
-
     public function destroy(Reservation $coreReservation)
     {
         if (!in_array('D', $this->chars)) return redirect('/no_permission');
@@ -201,15 +219,6 @@ class ReservationController extends BaseController
 
         return response()->json(['status' => 'Success'], 204);
     }
-    // private function fillCoreReservation($request)
-    // {
-    //     return [
-    //         'core_user_id' => $request->core_user_id,
-    //         'doctor_id' => $request->doctor_id,
-    //         'specialization_id' => $request->specialization_id,
-    //         'reservation_slot_id' => $request->reservation_slot_id,
-    //     ];
-    // }
     public function getDoctorsBySpecialization(Request $request)
     {
         $specializationId = $request->input('specialization_id');
@@ -223,23 +232,4 @@ class ReservationController extends BaseController
 
         return response()->json($doctors);
     }
-    // public function getAvailableSlots(Request $request)
-    // {
-    //     $doctorId = $request->input('doctor_id');
-
-    //     if (!$doctorId) {
-    //         return response()->json(['error' => 'Doctor ID is required'], 400);
-    //     }
-
-    //     $slots = ReservationSlot::where('doctor_id', $doctorId)
-    //         ->where('is_booked', false)
-    //         ->get();
-
-    //     return response()->json($slots);
-    // }
-    // public function availableSlots($doctorId)
-    // {
-    //     $slots = ReservationSlot::availableForDoctor($doctorId)->get();
-    //     return view('core.reservation_slots.available', compact('slots'));
-    // }
 }

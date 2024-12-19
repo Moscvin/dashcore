@@ -22,6 +22,15 @@
             <div class="col-md-12">
                 <form action="{{ route('core_reservations.store') }}" method="post">
                     @csrf
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3>Creare Rezervare</h3>
@@ -57,7 +66,8 @@
                                             <label class="required">Intervale de timp</label>
                                             <div id="slot-times-container">
                                                 <div class="input-group mb-2">
-                                                    <input type="datetime-local" name="slot_times[]" class="form-control" required>
+                                                    <input type="datetime-local" name="slot_times[]" class="form-control"
+                                                        required>
                                                     <button type="button" class="btn btn-success add-slot-btn">+</button>
                                                 </div>
                                             </div>
@@ -91,7 +101,7 @@
                 width: '100%'
             });
 
-        
+
             $(document).on('click', '.add-slot-btn', function() {
                 $('#slot-times-container').append(`
                     <div class="input-group mb-2">

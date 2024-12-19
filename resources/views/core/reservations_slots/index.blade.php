@@ -31,7 +31,6 @@
                                     <tr>
                                         <th>Doctor</th>
                                         <th>Time</th>
-                                        <th>Is Booked</th>
                                         @if (in_array('E', $chars))
                                             <th class='action_btn'>Edit</th>
                                         @endif
@@ -46,7 +45,6 @@
                                             <td>{{ $reservationSlot->doctor->name ?? null }}</td>
                                             <td>{{ \Carbon\Carbon::parse($reservationSlot->time)->format('d-m-Y H:i:s') }}
                                             </td>
-                                            <td>{{ $reservationSlot->is_booked }}</td>
                                             @if (in_array('E', $chars))
                                                 <td>
                                                     <a href='{{ route('core_reservation_slots.edit', $reservationSlot->id) }}'

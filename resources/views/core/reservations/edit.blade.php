@@ -23,6 +23,15 @@
                 <form action="{{ route('core_reservations.update', $coreReservation) }}" method="post">
                     @csrf
                     @method('PATCH')
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3>Editare Rezervare</h3>

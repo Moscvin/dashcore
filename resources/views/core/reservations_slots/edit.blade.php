@@ -75,19 +75,6 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="row form-group">
-                                <div class="col-md-6">
-                                    <label class="col-form-label">Este rezervat:</label>
-                                    <select class="form-control" name="is_booked">
-                                        <option value="0" {{ !$reservationSlot->is_booked ? 'selected' : '' }}>Nu
-                                        </option>
-                                        <option value="1" {{ $reservationSlot->is_booked ? 'selected' : '' }}>Da
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
                             <div class='row'>
                                 <div class='col-md-12'>
                                     <a class='btn btn-warning pull-left' href='{{ route('core_reservation_slots.index') }}'>
