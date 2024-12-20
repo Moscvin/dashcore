@@ -44,7 +44,7 @@
                             </div>
                             <div class="box-body">
                                 <div class="row">
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="required">Specializare</label>
                                             <select id="specialization" name="specialization_id"
@@ -58,10 +58,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-2">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="required">Intervale de timp</label>
                                             <div id="slot-times-container">

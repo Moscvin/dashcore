@@ -9,8 +9,12 @@
 @section('css')
     <style>
         .locked {
-            background-color: #f5f5f5 !important;
-            color: #a7a7a7 !important;
+            background-color: #f6aeae !important;
+            color: #111111 !important;
+        }
+        .unlocked {
+            background-color: #a3f6ae !important;
+            color: #111111 !important;
         }
 
         .btn-action {
@@ -95,6 +99,9 @@
                 createdRow: function(row, data, dataIndex) {
                     if (data['active'] != 1) {
                         $(row).addClass('locked');
+                    }
+                    else {
+                        $(row).addClass('unlocked');
                     }
                 },
                 buttons: [{

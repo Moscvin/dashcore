@@ -13,6 +13,7 @@ use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class ReservationController extends BaseController
 {
@@ -30,6 +31,10 @@ class ReservationController extends BaseController
         $index = 0;
         $items = [];
         foreach ($dataTable->items as $item) {
+            if ($item->core_user_id != Auth::id()) {
+                continue;
+            }
+
             $items[$index] = [
                 'active' => $item->status,
                 $item->coreUser->username ?? '',
@@ -109,9 +114,16 @@ class ReservationController extends BaseController
                 ->where('specialization_id', $request->specialization_id)
                 ->first();
 
-            if ($existingReservation) {
-                return back()->withErrors(['error' => 'Existing this reservation'])->withInput();
-            }
+            // if ($existingReservation) {
+            //     return back()->withErrors(['error' => 'Existing this reservation'])->withInput();
+            // }
+
+            // // Verifică dacă toate sloturile de timp sunt în viitor
+            // foreach ($request->slot_times as $slotTime) {
+            //     if (Carbon::parse($slotTime)->isPast()) {
+            //         return back()->withErrors(['error' => 'All slot times must be in the future'])->withInput();
+            //     }
+            // }
 
             $reservation = Reservation::create([
                 'core_user_id' => Auth::id(),
@@ -162,6 +174,7 @@ class ReservationController extends BaseController
 
         return view('core.reservations.edit', compact('coreReservation', 'clients', 'doctors', 'specializations', 'reservationSlots'));
     }
+
     public function update(CoreReservationRequest $request, Reservation $coreReservation)
     {
         if ($coreReservation->core_user_id != Auth::id()) {
@@ -185,7 +198,6 @@ class ReservationController extends BaseController
                 'specialization_id' => $request->specialization_id,
             ]);
 
-
             $coreReservation->reservationSlots()->delete();
 
             foreach ($request->slot_times as $slotTime) {
@@ -208,6 +220,7 @@ class ReservationController extends BaseController
 
         return response()->json(['status' => 'Success'], 200);
     }
+
     public function destroy(Reservation $coreReservation)
     {
         if (!in_array('D', $this->chars)) return redirect('/no_permission');
@@ -216,6 +229,7 @@ class ReservationController extends BaseController
 
         return response()->json(['status' => 'Success'], 204);
     }
+
     public function getDoctorsBySpecialization(Request $request)
     {
         $specializationId = $request->input('specialization_id');
@@ -225,7 +239,6 @@ class ReservationController extends BaseController
         }
 
         $doctors = Doctor::where('specialization_id', $specializationId)->get();
-
 
         return response()->json($doctors);
     }
