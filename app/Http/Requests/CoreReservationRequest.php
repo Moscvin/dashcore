@@ -22,9 +22,8 @@ class CoreReservationRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'specialization_id' => [
-                'required',
                 'exists:specializations,id'
             ],
             'slot_times' => 'required|array|min:1',
@@ -49,6 +48,12 @@ class CoreReservationRequest extends FormRequest
                 }
             ],
         ];
+
+        if ($this->routeIs('manager_reservation.*')) {
+            $rules['specialization_id'][] = 'nullable';
+        }
+
+        return $rules;
     }
 
     /**

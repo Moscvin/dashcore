@@ -45,19 +45,35 @@
                             </div>
                             <div class="box-body">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    {{-- <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="required">Specializare</label>
-                                            <select id="specialization" name="specialization_id"
-                                                class="form-control select2" required>
-                                                <option value="">Selectați o specializare</option>
-                                                @foreach ($specializations as $specialization)
-                                                    <option value="{{ $specialization->id }}"
-                                                        {{ $specialization->id == $coreReservation->specialization_id ? 'selected' : '' }}>
-                                                        {{ $specialization->specialization_name }}
+                                            <input type="text" class="form-control"
+                                                value="{{ $coreReservation->specialization->specialization_name }}"
+                                                readonly>
+                                        </div>
+
+                                    </div> --}}
+                                    {{-- <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Doctori</label>
+                                            <select id="doctors" name="doctor_id" class="form-control select2" required>
+                                                <option value="">Selectați un doctor</option>
+                                                @foreach ($doctors as $doctor)
+                                                    <option value="{{ $doctor->id }}"
+                                                        {{ $doctor->id == $coreReservation->doctor_id ? 'selected' : '' }}>
+                                                        {{ $doctor->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                    </div> --}}
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="required">Specializare</label>
+                                            <input type="text" class="form-control"
+                                                value="{{ $coreReservation->specialization->specialization_name }}"
+                                                readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -65,7 +81,7 @@
                                             <label>Doctori</label>
                                             <select id="doctors" name="doctor_id" class="form-control select2" required>
                                                 <option value="">Selectați un doctor</option>
-                                                @foreach ($doctors as $doctor)
+                                                @foreach ($doctors->where('specialization_id', $coreReservation->specialization_id) as $doctor)
                                                     <option value="{{ $doctor->id }}"
                                                         {{ $doctor->id == $coreReservation->doctor_id ? 'selected' : '' }}>
                                                         {{ $doctor->name }}
@@ -80,7 +96,8 @@
                                             <select id="status" name="status" class="form-control select2" required>
                                                 <option value="">Selectați statusul</option>
                                                 <option value="0"
-                                                    {{ $coreReservation->status == 0 ? 'selected' : '' }}>Inactiv</option>
+                                                    {{ $coreReservation->status == 0 ? 'selected' : '' }}>Inactiv
+                                                </option>
                                                 <option value="1"
                                                     {{ $coreReservation->status == 1 ? 'selected' : '' }}>Activ</option>
                                             </select>
@@ -110,26 +127,26 @@
                                                     </div>
                                                 @endforeach
                                             </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-md-12">
-                            <a class="btn btn-warning pull-left" href="{{ route('manager_reservation.index') }}">
-                                <i class="fas fa-times"></i> Anulare
-                            </a>
-                            <button class="btn btn-primary pull-right save_btn">
-                                <i class="fas fa-save"></i> Salvare
-                            </button>
-                        </div>
                     </div>
-                </form>
+            </div>
+
+            <div class="col-md-12">
+                <a class="btn btn-warning pull-left" href="{{ route('manager_reservation.index') }}">
+                    <i class="fas fa-times"></i> Anulare
+                </a>
+                <button class="btn btn-primary pull-right save_btn">
+                    <i class="fas fa-save"></i> Salvare
+                </button>
             </div>
         </div>
+        </form>
+    </div>
+    </div>
     </div>
 @endsection
 

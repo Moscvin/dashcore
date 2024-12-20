@@ -163,7 +163,7 @@ class ManagerReservationController extends BaseController
             }
 
             $coreReservation->update([
-                'specialization_id' => $request->specialization_id,
+                // 'specialization_id' => $request->specialization_id,
                 'doctor_id' => $request->doctor_id,
                 'status' => $request->status,
             ]);
