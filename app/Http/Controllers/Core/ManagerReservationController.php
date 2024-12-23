@@ -19,7 +19,7 @@ class ManagerReservationController extends BaseController
     public function index()
     {
         if (empty($this->chars)) return redirect('/no_permission');
-        return view('core.manager_reservation.index');
+        return view('core.manager_reservation.index',compact('doctors', 'specializations', 'reservationSlots'));
     }
 
     public function ajax(Request $request)
@@ -31,6 +31,7 @@ class ManagerReservationController extends BaseController
         $items = [];
         foreach ($dataTable->items as $item) {
             $items[$index] = [
+                $item->id,
                 'active' => $item->status,
                 $item->coreUser->username ?? '',
                 $item->doctor->name ?? '',
@@ -65,7 +66,13 @@ class ManagerReservationController extends BaseController
                 </button>"
                 );
             }
-
+            array_push(
+                $items[$index],
+                "<button onclick='manager_reservationUpdateItem(this)' data-id=\"$item->id\" data-reservation='" . json_encode($item) . "' type=\"button\"
+                class=\"btn btn-xs btn-success\" title=\"EditIcon\">
+                <i class=\"fa fa-edit\"></i>
+            </button>"
+            );
             if (in_array("D", $this->chars)) {
                 array_push(
                     $items[$index],
@@ -75,7 +82,6 @@ class ManagerReservationController extends BaseController
                 </button>"
                 );
             }
-
             $index++;
         }
 
@@ -164,13 +170,10 @@ class ManagerReservationController extends BaseController
             $coreReservation->update([
                 'doctor_id' => $request->doctor_id,
                 'status' => $request->status,
-                'reservation_slot_id' => null, // Reset the reservation slot ID
+                'reservation_slot_id' => null,
             ]);
 
-            // Delete existing reservation slots
             $coreReservation->reservationSlots()->delete();
-
-            // Create the new reservation slot
             $reservationSlot = ReservationSlot::create([
                 'reservation_id' => $coreReservation->id,
                 'time' => $request->slot_times,

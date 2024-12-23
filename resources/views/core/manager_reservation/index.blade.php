@@ -12,6 +12,7 @@
             background-color: #f6aeae !important;
             color: #111111 !important;
         }
+
         .unlocked {
             background-color: #a3f6ae !important;
             color: #111111 !important;
@@ -44,6 +45,7 @@
                             <table class="table table-responsive stripe" id="table">
                                 <thead>
                                     <tr>
+                                        <th>ID</th>
                                         <th>Client</th>
                                         <th>Doctor</th>
                                         <th>Specialization</th>
@@ -56,6 +58,7 @@
                                         @if (in_array('E', $chars))
                                             <th class="action_btn nosorting"></th>
                                         @endif
+                                        <th class="action_btn nosorting"></th>
                                         @if (in_array('L', $chars))
                                             <th class="action_btn nosorting"></th>
                                         @endif
@@ -64,10 +67,7 @@
                                         @endif
                                     </tr>
                                 </thead>
-                                <tbody>
-                                </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
@@ -83,10 +83,61 @@
         <x-core.modals.modal-delete-item prefix='manager_reservation' action='eliminare rezervare' url='manager_reservation'
             :tableId="'table'" />
     @endif
+    <div class="modal" id="translationsModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-white">
+                    <h3 class="modal-title"></h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display: block">
+                    <button type="button" class="btn btn-warning pull-left" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i>&nbsp;Annulla
+                    </button>
+                    <button type="button" class="btn btn-success pull-right" id="delete-btn" data-bs-dismiss="modal"
+                        onclick='submitTranslations()'>
+                        Salva
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
     <script>
+        var manager_reservationUpdateItem = function(btn) {
+            var data = JSON.parse(btn.dataset.word);
+            console.log(data);
+            const form = $(translationsModal._element).find('form');
+            form.data('id', data.id_word);
+            form.html('');
+            data.languages.forEach((item) => {
+
+                form.append(`
+                    <div class="row form-group">
+                        <div class="col-md-2">
+                            <div style='margin-top:8px;'>
+                                <label>${item.acronym}</label>
+                                <img src="${item.file_route}">
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control w-100" name="translations[${item.id_language}]" value="${item.translation.text}">
+                        </div>
+                    </div>
+                `);
+            });
+
+            $(translationsModal._element).find('h3.modal-title').text('Traduzione ' + data.text);
+            translationsModal.show();
+        };
         $(document).ready(function() {
             $('#table').DataTable({
                 dom: "lBrtip",
@@ -99,8 +150,7 @@
                 createdRow: function(row, data, dataIndex) {
                     if (data['active'] != 1) {
                         $(row).addClass('locked');
-                    }
-                    else {
+                    } else {
                         $(row).addClass('unlocked');
                     }
                 },

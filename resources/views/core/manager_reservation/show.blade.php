@@ -57,7 +57,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Data și ora</label>
-                                        <input class="form-control" value="{{ $coreReservation->reservationSlot->time ?? 'N/A' }}" disabled />
+                                        <input class="form-control" value="{{ $coreReservation->reservationSlots->first()->time ?? 'N/A' }}" disabled />
                                     </div>
                                 </div>
                             </div>
