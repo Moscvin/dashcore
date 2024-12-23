@@ -13,7 +13,6 @@ use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
 class ReservationController extends BaseController
 {
@@ -113,7 +112,6 @@ class ReservationController extends BaseController
             $existingReservation = Reservation::where('core_user_id', Auth::id())
                 ->where('specialization_id', $request->specialization_id)
                 ->first();
-
             // if ($existingReservation) {
             //     return back()->withErrors(['error' => 'Existing this reservation'])->withInput();
             // }

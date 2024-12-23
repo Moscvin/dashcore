@@ -104,7 +104,6 @@ class ManagerReservationController extends BaseController
             return redirect('/no_permission');
         }
 
-
         $reservation = Reservation::create([
             'core_user_id' => Auth::id(),
             'specialization_id' => $request->specialization_id,
@@ -121,6 +120,7 @@ class ManagerReservationController extends BaseController
 
         return redirect()->route('manager_reservation.index')->with('success', 'Reservation created successfully!');
     }
+
     public function show(Reservation $coreReservation)
     {
         if (!in_array('V', $this->chars)) return redirect('/no_permission');
@@ -140,16 +140,15 @@ class ManagerReservationController extends BaseController
         $clients = CoreUser::all();
         $doctors = Doctor::all();
         $specializations = Specialization::all();
-        $reservationSlots = ReservationSlot::all();
+        $reservationSlots = $coreReservation->reservationSlots;
 
         return view('core.manager_reservation.edit', compact('coreReservation', 'clients', 'doctors', 'specializations', 'reservationSlots'));
     }
+
     public function update(CoreReservationRequest $request, Reservation $coreReservation)
     {
-
-        // dd($request->all());
         if ($coreReservation->status != 0) {
-            return redirect()->route('manager_reservation.index')->with('error', 'Reservation its block and dont change');
+            return redirect()->route('manager_reservation.index')->with('error', 'Reservation is blocked and cannot be changed');
         }
 
         try {
@@ -159,25 +158,32 @@ class ManagerReservationController extends BaseController
                 ->first();
 
             if ($existingReservation) {
-                return back()->withErrors(['error' => 'You have this reservation'])->withInput();
+                return back()->withErrors(['error' => 'You already have this reservation'])->withInput();
             }
 
             $coreReservation->update([
-                // 'specialization_id' => $request->specialization_id,
                 'doctor_id' => $request->doctor_id,
                 'status' => $request->status,
+                'reservation_slot_id' => null, // Reset the reservation slot ID
             ]);
+
+            // Delete existing reservation slots
             $coreReservation->reservationSlots()->delete();
 
-            foreach ($request->slot_times as $slotTime) {
-                $coreReservation->reservationSlots()->create([
-                    'time' => $slotTime,
-                ]);
-            }
+            // Create the new reservation slot
+            $reservationSlot = ReservationSlot::create([
+                'reservation_id' => $coreReservation->id,
+                'time' => $request->slot_times,
+            ]);
+
+            // Update the reservation with the new slot ID
+            $coreReservation->update([
+                'reservation_slot_id' => $reservationSlot->id,
+            ]);
 
             return redirect()->route('manager_reservation.index')->with('success', 'Reservation updated successfully!');
         } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Error'])->withInput();
+            return back()->withErrors(['error' => 'Error: ' . $e->getMessage()])->withInput();
         }
     }
 
@@ -189,6 +195,7 @@ class ManagerReservationController extends BaseController
 
         return response()->json(['status' => 'Success'], 200);
     }
+
     public function destroy(Reservation $coreReservation)
     {
         if (!in_array('D', $this->chars)) return redirect('/no_permission');
@@ -197,6 +204,7 @@ class ManagerReservationController extends BaseController
 
         return response()->json(['status' => 'Success'], 204);
     }
+
     public function getDoctorsBySpecialization(Request $request)
     {
         $specializationId = $request->input('specialization_id');
@@ -206,7 +214,6 @@ class ManagerReservationController extends BaseController
         }
 
         $doctors = Doctor::where('specialization_id', $specializationId)->get();
-
 
         return response()->json($doctors);
     }

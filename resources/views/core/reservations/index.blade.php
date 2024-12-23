@@ -13,11 +13,14 @@
             color: #111111 !important;
         }
 
-        .unlocked {
+        /* .unlocked {
+            background-color: #a3f6ae !important;
+            color: #111111 !important;
+        } */
+        tr:not(.locked){
             background-color: #a3f6ae !important;
             color: #111111 !important;
         }
-
         .btn-action {
             margin-right: 5px;
         }
@@ -100,8 +103,6 @@
                 createdRow: function(row, data, dataIndex) {
                     if (data['active'] != 1) {
                         $(row).addClass('locked');
-                    } else {
-                        $(row).addClass('unlocked');
                     }
                 },
                 buttons: [{

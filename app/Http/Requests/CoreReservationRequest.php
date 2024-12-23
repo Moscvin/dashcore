@@ -51,6 +51,8 @@ class CoreReservationRequest extends FormRequest
 
         if ($this->routeIs('manager_reservation.*')) {
             $rules['specialization_id'][] = 'nullable';
+            $rules['slot_times'] = 'required|date|after:now';
+            unset($rules['slot_times.*']);
         }
 
         return $rules;
@@ -63,7 +65,7 @@ class CoreReservationRequest extends FormRequest
      */
     public function messages(): array
     {
-        return [
+        $messages = [
             'specialization_id.required' => 'Câmpul specializare este obligatoriu.',
             'specialization_id.exists' => 'Specializarea selectată nu există.',
             'slot_times.required' => 'Trebuie să adăugați cel puțin un interval de timp.',
@@ -73,5 +75,12 @@ class CoreReservationRequest extends FormRequest
             'slot_times.*.date' => 'Fiecare interval de timp trebuie să fie o dată validă.',
             'slot_times.*.after' => 'Fiecare interval de timp trebuie să fie în viitor.',
         ];
+
+        if ($this->routeIs('manager_reservation.*')) {
+            unset($messages['slot_times.array']);
+            unset($messages['slot_times.min']);
+        }
+
+        return $messages;
     }
 }

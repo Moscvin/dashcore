@@ -45,29 +45,6 @@
                             </div>
                             <div class="box-body">
                                 <div class="row">
-                                    {{-- <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="required">Specializare</label>
-                                            <input type="text" class="form-control"
-                                                value="{{ $coreReservation->specialization->specialization_name }}"
-                                                readonly>
-                                        </div>
-
-                                    </div> --}}
-                                    {{-- <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Doctori</label>
-                                            <select id="doctors" name="doctor_id" class="form-control select2" required>
-                                                <option value="">Selectați un doctor</option>
-                                                @foreach ($doctors as $doctor)
-                                                    <option value="{{ $doctor->id }}"
-                                                        {{ $doctor->id == $coreReservation->doctor_id ? 'selected' : '' }}>
-                                                        {{ $doctor->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div> --}}
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label class="required">Specializare</label>
@@ -106,24 +83,14 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="required">Intervale de timp</label>
-                                            <div id="slot-times-container">
-                                                @foreach ($coreReservation->reservationSlots as $slot)
-                                                    <div class="input-group mb-2">
-                                                        <input type="datetime-local" name="slot_times[]"
-                                                            class="form-control"
-                                                            value="{{ \Carbon\Carbon::parse($slot->time)->format('Y-m-d\TH:i') }}"
-                                                            required>
-                                                        <div class="input-group-append">
-                                                            <button type="button" class="btn btn-danger remove-slot-btn">
-                                                                <i class="fas fa-minus"></i>
-                                                            </button>
-                                                            <button type="button" class="btn btn-success add-slot-btn">
-                                                                <i class="fas fa-plus"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                            <select id="slot_times" name="slot_times" class="form-control select2" required>
+                                                @foreach ($reservationSlots as $slot)
+                                                    <option value="{{ $slot->time }}"
+                                                        {{ in_array($slot->time, $coreReservation->reservationSlots->pluck('time')->toArray()) ? 'selected' : '' }}>
+                                                        {{ \Carbon\Carbon::parse($slot->time)->format('Y-m-d H:i') }}
+                                                    </option>
                                                 @endforeach
-                                            </div>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -155,38 +122,6 @@
                 theme: 'dashcore',
                 width: '100%'
             });
-
-            $(document).on('click', '.add-slot-btn', function() {
-                $(this).closest('.input-group').after(`
-                    <div class="input-group mb-2">
-                        <input type="datetime-local" name="slot_times[]" class="form-control" required>
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-danger remove-slot-btn">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-success add-slot-btn">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                `);
-                updateRemoveButtons();
-            });
-
-            $(document).on('click', '.remove-slot-btn', function() {
-                $(this).closest('.input-group').remove();
-                updateRemoveButtons();
-            });
-
-            function updateRemoveButtons() {
-                if ($('#slot-times-container .input-group').length === 1) {
-                    $('#slot-times-container .remove-slot-btn').attr('disabled', true);
-                } else {
-                    $('#slot-times-container .remove-slot-btn').attr('disabled', false);
-                }
-            }
-
-            updateRemoveButtons();
         });
     </script>
 @stop
