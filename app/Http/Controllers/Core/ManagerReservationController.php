@@ -19,7 +19,7 @@ class ManagerReservationController extends BaseController
     public function index()
     {
         if (empty($this->chars)) return redirect('/no_permission');
-        return view('core.manager_reservation.index',compact('doctors', 'specializations', 'reservationSlots'));
+        return view('core.manager_reservation.index');
     }
 
     public function ajax(Request $request)
@@ -68,7 +68,7 @@ class ManagerReservationController extends BaseController
             }
             array_push(
                 $items[$index],
-                "<button onclick='manager_reservationUpdateItem(this)' data-id=\"$item->id\" data-reservation='" . json_encode($item) . "' type=\"button\"
+                "<button onclick='OpenManagerReservationUpdateItem(this)' data-id=\"$item->id\" data-reservation='" . json_encode($item) . "' type=\"button\"
                 class=\"btn btn-xs btn-success\" title=\"EditIcon\">
                 <i class=\"fa fa-edit\"></i>
             </button>"

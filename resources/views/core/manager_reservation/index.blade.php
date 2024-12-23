@@ -78,12 +78,12 @@
     @if (in_array('L', $chars))
         <x-core.modals.modal-lock-item prefix='manager_reservation' url='manager_reservation' />
     @endif
-
     @if (in_array('D', $chars))
         <x-core.modals.modal-delete-item prefix='manager_reservation' action='eliminare rezervare' url='manager_reservation'
             :tableId="'table'" />
     @endif
-    <div class="modal" id="translationsModal">
+
+    <div class="modal" id="ManagerReservationUpdateItem">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-white">
@@ -101,7 +101,7 @@
                         <i class="fas fa-times"></i>&nbsp;Annulla
                     </button>
                     <button type="button" class="btn btn-success pull-right" id="delete-btn" data-bs-dismiss="modal"
-                        onclick='submitTranslations()'>
+                        onclick='submitForm("updateForm")'>
                         Salva
                     </button>
                 </div>
@@ -112,32 +112,18 @@
 
 @section('js')
     <script>
-        var manager_reservationUpdateItem = function(btn) {
-            var data = JSON.parse(btn.dataset.word);
-            console.log(data);
-            const form = $(translationsModal._element).find('form');
-            form.data('id', data.id_word);
-            form.html('');
-            data.languages.forEach((item) => {
+        const ManagerReservationUpdateItem = new bootstrap.Modal(document.getElementById(
+            'ManagerReservationUpdateItem'), {});
 
-                form.append(`
-                    <div class="row form-group">
-                        <div class="col-md-2">
-                            <div style='margin-top:8px;'>
-                                <label>${item.acronym}</label>
-                                <img src="${item.file_route}">
-                            </div>
-                        </div>
-                        <div class="col-md-10">
-                            <input type="text" class="form-control w-100" name="translations[${item.id_language}]" value="${item.translation.text}">
-                        </div>
-                    </div>
-                `);
+        var submitForm = function(formId) {
+            const form = $(manager_reservationUpdateItem._element).find('form');
+            submitFormAjax(form).then((response) => {
+                manager_reservationUpdateItem.hide();
+                form.find(':input').val('');
+                table.ajax.reload();
             });
-
-            $(translationsModal._element).find('h3.modal-title').text('Traduzione ' + data.text);
-            translationsModal.show();
         };
+
         $(document).ready(function() {
             $('#table').DataTable({
                 dom: "lBrtip",

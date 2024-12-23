@@ -198,6 +198,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
                 Route::patch('/{coreReservation}/lock', 'lock')->name('lock');
                 Route::delete('/{coreReservation}', 'destroy')->name('destroy');
                 Route::get('/doctors', 'getDoctorsBySpecialization')->name('doctors');
+                Route::get('/manager_reservation/{id}/edit', 'edit')->name('edit');
             });
         });
 
