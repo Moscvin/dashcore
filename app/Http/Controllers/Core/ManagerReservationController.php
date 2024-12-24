@@ -19,7 +19,8 @@ class ManagerReservationController extends BaseController
     public function index()
     {
         if (empty($this->chars)) return redirect('/no_permission');
-        return view('core.manager_reservation.index');
+        $specializations = Specialization::all();
+        return view('core.manager_reservation.index',compact('specializations'));
     }
 
     public function ajax(Request $request)
@@ -38,7 +39,7 @@ class ManagerReservationController extends BaseController
                 $item->specialization->specialization_name ?? '',
             ];
             $encoded = json_encode($item);
-            
+
             if (in_array("V", $this->chars)) {
                 array_push(
                     $items[$index],

@@ -87,7 +87,9 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-white">
-                    <h3 class="modal-title"></h3>
+                    <h3 class="modal-title">
+                        Update Reservation
+                    </h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -126,31 +128,59 @@
         var openManagerReservationUpdateItem = function(btn) {
             var data = JSON.parse(btn.dataset.word);
             console.log(data);
-            console.log(data.username);
-            console.log(data.name);
             const form = $(managerReservationUpdateItem._element).find('form');
             form.data('id', data.id);
             form.html('');
 
             form.append(`
-                 <div class="col-md-6">
-                     <div class="form-group">
-            ${data.id}
-            ${data.status}
-            ${data.core_user.username}
-            ${data.doctor.name}
-            ${data.specialization.specialization_name}
-            ${data.reservation_slots.map(slot => slot.time).join(', ')}
-                    </div>
-                        </div>
-`);
+          <div class="col-md-12">
+    <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" class="form-control">
+            <option value="1" ${data.status === 1 ? 'selected' : ''}>Activ</option>
+            <option value="0" ${data.status === 0 ? 'selected' : ''}>Inactiv</option>
+        </select>
+
+        <label for="username">Username</label>
+        <input type="text" id="username" class="form-control" value="${data.core_user?.username ?? 'Username not available'}" readonly>
+
+        <label for="specialization">Specialization</label>
+<select id="specialization" class="form-control">
+    @foreach ($specializations as $specialization)
+        <option value="{{ $specialization->id }}">
+            {{ $specialization->specialization_name }}
+        </option>
+    @endforeach
+</select>
+
+
+        <!-- Doctor Name Dropdown -->
+        <label for="doctor_name">Doctor Name</label>
+        <select id="doctor_name" class="form-control">
+            ${data.doctorsList?.map(doctor => `
+                            <option value="${doctor.id}" ${doctor.id === data.doctor?.id ? 'selected' : ''}>
+                                ${doctor.name}
+                            </option>
+                        `).join('') ?? '<option>No doctors available</option>'}
+        </select>
+
+        <!-- Reservation Slots Dropdown -->
+        <label for="reservation_slot">Reservation Slot</label>
+        <select id="reservation_slot" class="form-control">
+            ${data.reservation_slots?.map(slot => `
+                            <option value="${slot.id}">
+                                ${slot.time}
+                            </option>
+                        `).join('') ?? '<option>No reservation slots available</option>'}
+        </select>
+    </div>
+</div>
+
+            `);
 
             $(managerReservationUpdateItem._element).find('.modal-title').text(data.title);
             managerReservationUpdateItem.show();
-        };
-
-
-
+        }
 
         $(document).ready(function() {
             $('#table').DataTable({
@@ -178,10 +208,8 @@
                         },
                         filename: function() {
                             const d = new Date();
-                            return document.title + '-' + d.getFullYear() + (d
-                                    .getMonth() + 1) + d
-                                .getDate() +
-                                d.getHours() + d.getMinutes() + d.getSeconds();
+                            return document.title + '-' + d.getFullYear() + (d.getMonth() + 1) + d
+                                .getDate() + d.getHours() + d.getMinutes() + d.getSeconds();
                         }
                     },
                     {
