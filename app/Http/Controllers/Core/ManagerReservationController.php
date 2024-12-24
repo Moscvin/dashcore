@@ -20,7 +20,8 @@ class ManagerReservationController extends BaseController
     {
         if (empty($this->chars)) return redirect('/no_permission');
         $specializations = Specialization::all();
-        return view('core.manager_reservation.index',compact('specializations'));
+        $doctors = Doctor::with('specialization')->get();
+        return view('core.manager_reservation.index', compact('specializations', 'doctors'));
     }
 
     public function ajax(Request $request)

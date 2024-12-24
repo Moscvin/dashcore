@@ -133,7 +133,7 @@
             form.html('');
 
             form.append(`
-          <div class="col-md-12">
+         <div class="col-md-12">
     <div class="form-group">
         <label for="status">Status</label>
         <select id="status" class="form-control">
@@ -142,26 +142,19 @@
         </select>
 
         <label for="username">Username</label>
-        <input type="text" id="username" class="form-control" value="${data.core_user?.username ?? 'Username not available'}" readonly>
+        <input type="text" id="username" class="form-control" value="${data.core_user.username ?? 'Username not available'}" readonly>
 
         <label for="specialization">Specialization</label>
-<select id="specialization" class="form-control">
-    @foreach ($specializations as $specialization)
-        <option value="{{ $specialization->id }}">
-            {{ $specialization->specialization_name }}
-        </option>
-    @endforeach
-</select>
+        <input type="text" id="specialization" class="form-control" value="${data.specialization.specialization_name ?? 'Specialization not available'}" readonly>
 
-
-        <!-- Doctor Name Dropdown -->
         <label for="doctor_name">Doctor Name</label>
         <select id="doctor_name" class="form-control">
-            ${data.doctorsList?.map(doctor => `
-                            <option value="${doctor.id}" ${doctor.id === data.doctor?.id ? 'selected' : ''}>
-                                ${doctor.name}
-                            </option>
-                        `).join('') ?? '<option>No doctors available</option>'}
+            ${data.doctorsList?.filter(doctor => doctor.specialization_id === data.specialization.id)
+                .map(doctor => `
+                                <option value="${doctor.id}" ${doctor.id === data.doctor?.id ? 'selected' : ''}>
+                                    ${doctor.name}
+                                </option>
+                            `).join('') ?? '<option>No doctors available</option>'}
         </select>
 
         <!-- Reservation Slots Dropdown -->
