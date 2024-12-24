@@ -83,7 +83,7 @@
             :tableId="'table'" />
     @endif
 
-    <div class="modal" id="ManagerReservationUpdateItem">
+    <div class="modal" id="managerReservationUpdateItem">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-white">
@@ -112,17 +112,45 @@
 
 @section('js')
     <script>
-        const ManagerReservationUpdateItem = new bootstrap.Modal(document.getElementById(
-            'ManagerReservationUpdateItem'), {});
+        const managerReservationUpdateItem = new bootstrap.Modal(document.getElementById(
+            'managerReservationUpdateItem'), {});
 
-        var submitForm = function(formId) {
-            const form = $(manager_reservationUpdateItem._element).find('form');
-            submitFormAjax(form).then((response) => {
-                manager_reservationUpdateItem.hide();
-                form.find(':input').val('');
+        var submitForm = function() {
+            submitFormAjax($(managerReservationUpdateItem._element).find('form')).then((response) => {
+                managerReservationUpdateItem.hide();
+                $(managerReservationUpdateItem._element).find('form').find(':input').val('');
                 table.ajax.reload();
             });
+        }
+
+        var openManagerReservationUpdateItem = function(btn) {
+            var data = JSON.parse(btn.dataset.word);
+            console.log(data);
+            console.log(data.username);
+            console.log(data.name);
+            const form = $(managerReservationUpdateItem._element).find('form');
+            form.data('id', data.id);
+            form.html('');
+
+            form.append(`
+                 <div class="col-md-6">
+                     <div class="form-group">
+            ${data.id}
+            ${data.status}
+            ${data.core_user.username}
+            ${data.doctor.name}
+            ${data.specialization.specialization_name}
+            ${data.reservation_slots.map(slot => slot.time).join(', ')}
+                    </div>
+                        </div>
+`);
+
+            $(managerReservationUpdateItem._element).find('.modal-title').text(data.title);
+            managerReservationUpdateItem.show();
         };
+
+
+
 
         $(document).ready(function() {
             $('#table').DataTable({
@@ -150,7 +178,8 @@
                         },
                         filename: function() {
                             const d = new Date();
-                            return document.title + '-' + d.getFullYear() + (d.getMonth() + 1) + d
+                            return document.title + '-' + d.getFullYear() + (d
+                                    .getMonth() + 1) + d
                                 .getDate() +
                                 d.getHours() + d.getMinutes() + d.getSeconds();
                         }

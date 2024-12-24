@@ -37,7 +37,8 @@ class ManagerReservationController extends BaseController
                 $item->doctor->name ?? '',
                 $item->specialization->specialization_name ?? '',
             ];
-
+            $encoded = json_encode($item);
+            
             if (in_array("V", $this->chars)) {
                 array_push(
                     $items[$index],
@@ -68,7 +69,7 @@ class ManagerReservationController extends BaseController
             }
             array_push(
                 $items[$index],
-                "<button onclick='OpenManagerReservationUpdateItem(this)' data-id=\"$item->id\" data-reservation='" . json_encode($item) . "' type=\"button\"
+                "<button onclick='openManagerReservationUpdateItem(this)' data-word='{$encoded}'  type=\"button\"
                 class=\"btn btn-xs btn-success\" title=\"EditIcon\">
                 <i class=\"fa fa-edit\"></i>
             </button>"
@@ -179,7 +180,6 @@ class ManagerReservationController extends BaseController
                 'time' => $request->slot_times,
             ]);
 
-            // Update the reservation with the new slot ID
             $coreReservation->update([
                 'reservation_slot_id' => $reservationSlot->id,
             ]);
