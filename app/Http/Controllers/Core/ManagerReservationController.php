@@ -21,7 +21,7 @@ class ManagerReservationController extends BaseController
         if (empty($this->chars)) return redirect('/no_permission');
         $specializations = Specialization::all();
         $doctors = Doctor::with('specialization')->get();
-        return view('core.manager_reservation.index', compact('specializations', 'doctors'));
+        return view('core.manager_reservation.index', compact('specializations', 'doctors',));
     }
 
     public function ajax(Request $request)
@@ -32,6 +32,11 @@ class ManagerReservationController extends BaseController
         $index = 0;
         $items = [];
         foreach ($dataTable->items as $item) {
+            $encodedItem = $item->toArray();
+            $encodedItem['doctorsList'] = \App\Models\Doctor::all();
+            $encodedItem['coreUser'] = $item->coreUser;
+            $encoded = json_encode($encodedItem);
+
             $items[$index] = [
                 $item->id,
                 'active' => $item->status,
@@ -39,7 +44,14 @@ class ManagerReservationController extends BaseController
                 $item->doctor->name ?? '',
                 $item->specialization->specialization_name ?? '',
             ];
-            $encoded = json_encode($item);
+
+            array_push(
+                $items[$index],
+                "<button onclick='openManagerReservationUpdateItem(this)' data-word='{$encoded}' type=\"button\"
+                 class=\"btn btn-xs btn-success\" title=\"EditIcon\">
+                 <i class=\"fa fa-edit\"></i>
+                </button>"
+            );
 
             if (in_array("V", $this->chars)) {
                 array_push(
@@ -69,13 +81,6 @@ class ManagerReservationController extends BaseController
                 </button>"
                 );
             }
-            array_push(
-                $items[$index],
-                "<button onclick='openManagerReservationUpdateItem(this)' data-word='{$encoded}'  type=\"button\"
-                class=\"btn btn-xs btn-success\" title=\"EditIcon\">
-                <i class=\"fa fa-edit\"></i>
-            </button>"
-            );
             if (in_array("D", $this->chars)) {
                 array_push(
                     $items[$index],
@@ -95,6 +100,8 @@ class ManagerReservationController extends BaseController
             'recordsTotal' => $dataTable->recordsTotal,
             'recordsFiltered' => $dataTable->recordsFiltered,
             "data" => $items,
+            'doctors' => Doctor::all(),
+            'doctorsList' => \App\Models\Doctor::all(),
         ]);
     }
 

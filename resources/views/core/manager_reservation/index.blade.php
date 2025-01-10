@@ -127,50 +127,61 @@
 
         var openManagerReservationUpdateItem = function(btn) {
             var data = JSON.parse(btn.dataset.word);
-            console.log(data);
+            console.log('Data received:', data);
+
             const form = $(managerReservationUpdateItem._element).find('form');
             form.data('id', data.id);
             form.html('');
 
             form.append(`
-         <div class="col-md-12">
-    <div class="form-group">
-        <label for="status">Status</label>
-        <select id="status" class="form-control">
-            <option value="1" ${data.status === 1 ? 'selected' : ''}>Activ</option>
-            <option value="0" ${data.status === 0 ? 'selected' : ''}>Inactiv</option>
-        </select>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" class="form-control">
+                            <option value="1" ${data.status === 1 ? 'selected' : ''}>Activ</option>
+                            <option value="0" ${data.status === 0 ? 'selected' : ''}>Inactiv</option>
+                        </select>
 
-        <label for="username">Username</label>
-        <input type="text" id="username" class="form-control" value="${data.core_user.username ?? 'Username not available'}" readonly>
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="form-control" value="${data.coreUser?.username ?? 'Username not available'}" readonly>
 
-        <label for="specialization">Specialization</label>
-        <input type="text" id="specialization" class="form-control" value="${data.specialization.specialization_name ?? 'Specialization not available'}" readonly>
+                        <label for="specialization">Specialization</label>
+                        <input type="text" id="specialization" class="form-control" value="${data.specialization?.specialization_name ?? 'Specialization not available'}" readonly>
 
-        <label for="doctor_name">Doctor Name</label>
-        <select id="doctor_name" class="form-control">
-            ${data.doctorsList?.filter(doctor => doctor.specialization_id === data.specialization.id)
-                .map(doctor => `
-                                <option value="${doctor.id}" ${doctor.id === data.doctor?.id ? 'selected' : ''}>
-                                    ${doctor.name}
-                                </option>
-                            `).join('') ?? '<option>No doctors available</option>'}
-        </select>
+                        <label for="doctor_name">Doctor Name</label>
+                        <select id="doctor_name" class="form-control">
+                            ${
+                                data.doctorsList && data.doctorsList.length > 0
+                                ? data.doctorsList
+                                    .filter(doctor => doctor.specialization_id === data.specialization.id)
+                                    .map(doctor => `
+                                                <option value="${doctor.id}" ${doctor.id === data.doctor_id ? 'selected' : ''}>
+                                                    ${doctor.name}
+                                                </option>
+                                            `).join('')
+                                : '<option>No doctors available</option>'
+                            }
+                        </select>
 
-        <!-- Reservation Slots Dropdown -->
-        <label for="reservation_slot">Reservation Slot</label>
-        <select id="reservation_slot" class="form-control">
-            ${data.reservation_slots?.map(slot => `
-                            <option value="${slot.id}">
-                                ${slot.time}
-                            </option>
-                        `).join('') ?? '<option>No reservation slots available</option>'}
-        </select>
-    </div>
-</div>
-
+                        <label for="reservation_slot">Reservation Slot</label>
+                        <select id="reservation_slot" class="form-control">
+                            ${
+                                data.reservation_slots && data.reservation_slots.length > 0
+                                ? data.reservation_slots
+                                    .map(slot => `
+                                                <option value="${slot.id}">
+                                                    ${slot.time}
+                                                </option>
+                                            `).join('')
+                                : '<option>No reservation slots available</option>'
+                            }
+                        </select>
+                    </div>
+                </div>
             `);
 
+            console.log('Doctors List:', data.doctorsList);
+            console.log('Current Specialization ID:', data.specialization.id);
             $(managerReservationUpdateItem._element).find('.modal-title').text(data.title);
             managerReservationUpdateItem.show();
         }
