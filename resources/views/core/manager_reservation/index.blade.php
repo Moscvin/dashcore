@@ -134,45 +134,51 @@
             form.html('');
 
             form.append(`
+                <input type="hidden" name="id" value="${data.id}">
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="status">Status</label>
-                        <select id="status" class="form-control">
+                        <select id="status" name="status" class="form-control">
                             <option value="1" ${data.status === 1 ? 'selected' : ''}>Activ</option>
                             <option value="0" ${data.status === 0 ? 'selected' : ''}>Inactiv</option>
                         </select>
 
                         <label for="username">Username</label>
-                        <input type="text" id="username" class="form-control" value="${data.coreUser?.username ?? 'Username not available'}" readonly>
+                        <input type="text" id="username" name="username" class="form-control"
+                               value="${data.coreUser?.username ?? 'Username not available'}" readonly>
 
                         <label for="specialization">Specialization</label>
-                        <input type="text" id="specialization" class="form-control" value="${data.specialization?.specialization_name ?? 'Specialization not available'}" readonly>
+                        <input type="hidden" name="specialization_id" value="${data.specialization?.id ?? ''}">
+                        <input type="text" id="specialization" class="form-control"
+                               value="${data.specialization?.specialization_name ?? 'Specialization not available'}"
+                               readonly>
 
                         <label for="doctor_name">Doctor Name</label>
-                        <select id="doctor_name" class="form-control">
+                        <select id="doctor_name" name="doctor_id" class="form-control">
                             ${
                                 data.doctorsList && data.doctorsList.length > 0
                                 ? data.doctorsList
                                     .filter(doctor => doctor.specialization_id === data.specialization.id)
                                     .map(doctor => `
-                                                <option value="${doctor.id}" ${doctor.id === data.doctor_id ? 'selected' : ''}>
-                                                    ${doctor.name}
-                                                </option>
-                                            `).join('')
+                                            <option value="${doctor.id}" ${doctor.id === data.doctor_id ? 'selected' : ''}>
+                                                ${doctor.name}
+                                            </option>
+                                        `)
+                                    .join('')
                                 : '<option>No doctors available</option>'
                             }
                         </select>
 
                         <label for="reservation_slot">Reservation Slot</label>
-                        <select id="reservation_slot" class="form-control">
+                        <select id="reservation_slot" name="slot_times" class="form-control">
                             ${
                                 data.reservation_slots && data.reservation_slots.length > 0
                                 ? data.reservation_slots
                                     .map(slot => `
-                                                <option value="${slot.id}">
-                                                    ${slot.time}
-                                                </option>
-                                            `).join('')
+                                            <option value="${slot.id}">
+                                                ${slot.time}
+                                            </option>
+                                        `).join('')
                                 : '<option>No reservation slots available</option>'
                             }
                         </select>
