@@ -48,7 +48,7 @@ class ManagerReservationController extends BaseController
             array_push(
                 $items[$index],
                 "<button onclick='openManagerReservationUpdateItem(this)' data-word='{$encoded}' type=\"button\"
-                 class=\"btn btn-xs btn-success\" title=\"EditIcon\">
+                 class=\"btn btn-xs btn-success\" title=\"EditIcon\" " . ($item->status == 1 ? 'disabled' : '') . ">
                  <i class=\"fa fa-edit\"></i>
                 </button>"
             );
@@ -62,12 +62,14 @@ class ManagerReservationController extends BaseController
                 );
             }
             if (in_array("E", $this->chars)) {
-                array_push(
-                    $items[$index],
-                    "<a href=\"/manager_reservation/$item->id/edit\" class=\"btn btn-xs btn-info\" title=\"Editează\">
-                    <i class=\"fa fa-edit\"></i>
-                </a>"
-                );
+                $editLink = $item->status == 1
+                    ? "<button type=\"button\" class=\"btn btn-xs btn-info\" title=\"Rezervare blocată\" disabled>
+                         <i class=\"fa fa-edit\"></i>
+                       </button>"
+                    : "<a href=\"/manager_reservation/$item->id/edit\" class=\"btn btn-xs btn-info\" title=\"Editează\">
+                         <i class=\"fa fa-edit\"></i>
+                       </a>";
+                array_push($items[$index], $editLink);
             }
             if (in_array("L", $this->chars)) {
                 $btnClass = $item->status == 1 ? 'warning' : 'primary';
@@ -82,13 +84,16 @@ class ManagerReservationController extends BaseController
                 );
             }
             if (in_array("D", $this->chars)) {
-                array_push(
-                    $items[$index],
-                    "<button onclick='manager_reservationDeleteItem(this)' data-id=\"$item->id\" type=\"button\"
-                    class=\"action_del btn btn-xs btn-danger\" title=\"Șterge\">
-                    <i class=\"fa fa-trash\"></i>
-                </button>"
-                );
+                $deleteLink = $item->status == 1
+                    ? "<button type=\"button\" class=\"btn btn-xs btn-danger\" title=\"Rezervare blocată\" disabled>
+                         <i class=\"fa fa-trash\"></i>
+                       </button>"
+                    : "<button onclick='manager_reservationDeleteItem(this)' data-id=\"$item->id\" type=\"button\"
+                       class=\"action_del btn btn-xs btn-danger\" title=\"Șterge\">
+                       <i class=\"fa fa-trash\"></i>
+                     </button>";
+
+                array_push($items[$index], $deleteLink);
             }
             $index++;
         }
@@ -212,6 +217,9 @@ class ManagerReservationController extends BaseController
     {
         if (!in_array('D', $this->chars)) return redirect('/no_permission');
 
+        if ($coreReservation->status == 1) {
+            return response()->json(['error' => 'Reservation is blocked and cannot be deleted'], 400);
+        }
         $coreReservation->delete();
 
         return response()->json(['status' => 'Success'], 204);

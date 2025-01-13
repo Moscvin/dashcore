@@ -50,12 +50,14 @@ class ReservationController extends BaseController
                 );
             }
             if (in_array("E", $this->chars)) {
-                array_push(
-                    $items[$index],
-                    "<a href=\"/core_reservations/$item->id/edit\" class=\"btn btn-xs btn-info\" title=\"Editează\">
-                    <i class=\"fa fa-edit\"></i>
-                </a>"
-                );
+                $editLink = $item->status == 1
+                    ? "<button type=\"button\" class=\"btn btn-xs btn-info\" title=\"Rezervare blocată\" disabled>
+                         <i class=\"fa fa-edit\"></i>
+                       </button>"
+                    : "<a href=\"/manager_reservation/$item->id/edit\" class=\"btn btn-xs btn-info\" title=\"Editează\">
+                         <i class=\"fa fa-edit\"></i>
+                       </a>";
+                array_push($items[$index], $editLink);
             }
             if (in_array("L", $this->chars)) {
                 $btnClass = $item->status == 1 ? 'warning' : 'primary';
@@ -71,15 +73,17 @@ class ReservationController extends BaseController
             }
 
             if (in_array("D", $this->chars)) {
-                array_push(
-                    $items[$index],
-                    "<button onclick='reservationDeleteItem(this)' data-id=\"$item->id\" type=\"button\"
-                    class=\"action_del btn btn-xs btn-danger\" title=\"Șterge\">
-                    <i class=\"fa fa-trash\"></i>
-                </button>"
-                );
-            }
+                $deleteLink = $item->status == 1
+                    ? "<button type=\"button\" class=\"btn btn-xs btn-danger\" title=\"Rezervare blocată\" disabled>
+                         <i class=\"fa fa-trash\"></i>
+                       </button>"
+                    : "<button onclick='manager_reservationDeleteItem(this)' data-id=\"$item->id\" type=\"button\"
+                       class=\"action_del btn btn-xs btn-danger\" title=\"Șterge\">
+                       <i class=\"fa fa-trash\"></i>
+                     </button>";
 
+                array_push($items[$index], $deleteLink);
+            }
             $index++;
         }
 
@@ -223,6 +227,9 @@ class ReservationController extends BaseController
     {
         if (!in_array('D', $this->chars)) return redirect('/no_permission');
 
+        if ($coreReservation->status == 1) {
+            return response()->json(['error' => 'Reservation is blocked and cannot be deleted'], 400);
+        }
         $coreReservation->delete();
 
         return response()->json(['status' => 'Success'], 204);
